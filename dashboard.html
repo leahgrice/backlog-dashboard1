@@ -16,20 +16,17 @@
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
 button{cursor:pointer;font-family:inherit;}
 
-/* ── HEADER ── */
 .hdr{background:linear-gradient(135deg,var(--pri-dd),var(--pri),var(--acc));color:#fff;padding:24px 32px;box-shadow:0 4px 20px rgba(0,0,0,.15);position:sticky;top:0;z-index:100;}
 .hdr h1{font-size:24px;font-weight:800;letter-spacing:-.5px;}
 .hdr-sub{opacity:.85;font-size:13px;margin-top:4px;}
 
-/* ── TABS ── */
-.tabs{display:flex;gap:0;background:var(--pri-dd);padding:0 32px;border-bottom:3px solid var(--acc);position:sticky;top:76px;z-index:99;}
+.tabs{display:flex;gap:0;background:var(--pri-dd);padding:0 32px;border-bottom:3px solid var(--acc);position:sticky;top:76px;z-index:99;flex-wrap:wrap;}
 .tab-btn{background:none;border:none;color:rgba(255,255,255,.65);padding:12px 22px;font-size:13px;font-weight:600;letter-spacing:.3px;transition:.2s;border-bottom:3px solid transparent;margin-bottom:-3px;}
 .tab-btn:hover{color:#fff;background:rgba(255,255,255,.08);}
 .tab-btn.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.1);}
 .tab-panel{display:none;padding:28px 32px;max-width:1500px;margin:0 auto;}
 .tab-panel.active{display:block;}
 
-/* ── KPIs ── */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:16px;margin-bottom:28px;}
 .kpi{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);border-left:5px solid var(--pri);transition:transform .2s;}
 .kpi:hover{transform:translateY(-2px);}
@@ -38,24 +35,20 @@ button{cursor:pointer;font-family:inherit;}
 .kpi-note{font-size:11px;color:var(--mute);}
 .kpi.c2{border-left-color:var(--ok)}.kpi.c3{border-left-color:var(--warn)}.kpi.c4{border-left-color:var(--acc)}.kpi.c5{border-left-color:var(--err)}.kpi.c6{border-left-color:var(--orange)}.kpi.c7{border-left-color:#8e44ad}.kpi.c8{border-left-color:#1abc9c}
 
-/* ── PANELS ── */
 .panel{background:var(--card);border-radius:12px;padding:24px;box-shadow:var(--shadow);margin-bottom:22px;}
 .panel h3{font-size:15px;font-weight:700;color:var(--pri-d);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .panel h3 .icon{font-size:18px;}
 
-/* ── GRID LAYOUTS ── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;}
 @media(max-width:1000px){.g2,.g3{grid-template-columns:1fr;}}
 
-/* ── BAR CHART ── */
 .bar-row{display:grid;grid-template-columns:200px 1fr 120px;align-items:center;gap:10px;margin-bottom:6px;}
 .bar-label{font-size:12px;font-weight:600;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .bar-track{background:#e9ecef;border-radius:5px;height:22px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:5px;transition:width 1s ease;min-width:2px;}
 .bar-val{font-size:12px;font-weight:700;}
 
-/* ── TABLES ── */
 .tbl-wrap{overflow-x:auto;max-height:600px;overflow-y:auto;border:1px solid var(--bdr);border-radius:8px;}
 .tbl{width:100%;border-collapse:collapse;font-size:13px;}
 .tbl th{background:var(--pri-d);color:#fff;padding:10px 12px;text-align:left;font-weight:600;position:sticky;top:0;z-index:2;cursor:pointer;white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
@@ -66,7 +59,6 @@ button{cursor:pointer;font-family:inherit;}
 .tbl .r{text-align:right}.tbl .c{text-align:center}
 .tbl .bold{font-weight:700;}
 
-/* ── PM ACCORDION ── */
 .pm-card{background:var(--card);border-radius:10px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden;border:1px solid var(--bdr);}
 .pm-header{display:grid;grid-template-columns:40px 1fr 140px 90px 60px;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:background .15s;user-select:none;}
 .pm-header:hover{background:var(--hover);}
@@ -83,7 +75,6 @@ button{cursor:pointer;font-family:inherit;}
 .pm-body.open{display:block;}
 .pm-body .tbl th{background:#334155;}
 
-/* ── SEARCH + FILTERS ── */
 .filter-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
 .search{flex:1;min-width:220px;padding:10px 14px;border:2px solid var(--bdr);border-radius:8px;font-size:13px;transition:border-color .2s;}
 .search:focus{outline:none;border-color:var(--pri);}
@@ -94,1269 +85,84 @@ button{cursor:pointer;font-family:inherit;}
 .btn-out{background:#fff;color:var(--pri);border:2px solid var(--pri);}.btn-out:hover{background:var(--pri);color:#fff;}
 .btn-sm{padding:6px 12px;font-size:11px;border-radius:6px;}
 
-/* ── BADGES ── */
-.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;}
-.b-red{background:var(--err)}.b-orange{background:var(--orange)}.b-yellow{background:var(--warn);color:#333}.b-green{background:var(--ok)}.b-blue{background:var(--pri)}.b-purple{background:#8e44ad}.b-teal{background:#1abc9c}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;}
+.b-red{background:var(--err)}.b-orange{background:var(--orange)}.b-yellow{background:var(--warn);color:#333}.b-green{background:var(--ok)}.b-blue{background:var(--pri)}.b-purple{background:#8e44ad}.b-teal{background:#1abc9c}.b-pink{background:#e84393}.b-navy{background:#2c3e50}.b-lime{background:#27ae60}.b-steel{background:#636e72}.b-indigo{background:#6c5ce7}
 
-/* ── MINI BAR ── */
 .mini-bar{display:flex;align-items:center;gap:6px;}
 .mini-track{flex:1;height:8px;background:#e9ecef;border-radius:4px;overflow:hidden;}
 .mini-fill{height:100%;border-radius:4px;}
 .mini-pct{font-size:11px;font-weight:700;min-width:40px;text-align:right;}
 
-/* ── STAT BLOCKS ── */
 .stat-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
 .stat-block{flex:1;min-width:140px;background:var(--row-alt);border-radius:8px;padding:14px;text-align:center;border:1px solid var(--bdr);}
 .stat-block .sv{font-size:20px;font-weight:800;color:var(--pri-d);}
 .stat-block .sl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--mute);margin-top:3px;}
 
-/* ── CUSTOMER TREEMAP-STYLE ── */
-.cust-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
-.cust-card{border-radius:8px;padding:14px;border:1px solid var(--bdr);transition:transform .15s;cursor:default;}
-.cust-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
-.cust-name{font-weight:700;font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cust-val{font-size:18px;font-weight:800;color:var(--pri-d);}
-.cust-meta{font-size:11px;color:var(--mute);margin-top:4px;}
-
-/* ── EXPORT BTN ── */
-.export-float{position:fixed;bottom:24px;right:24px;z-index:50;display:flex;gap:8px;}
-.export-float .btn{box-shadow:0 4px 15px rgba(0,0,0,.15);}
-
-/* ── TOOLTIP ── */
-[data-tip]{position:relative;}
-[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;white-space:nowrap;z-index:200;pointer-events:none;}
-
-/* ── FOOTER ── */
 .footer{text-align:center;padding:20px;color:var(--mute);font-size:11px;border-top:1px solid var(--bdr);margin-top:20px;}
 
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:8px;height:8px;}
 ::-webkit-scrollbar-track{background:#f1f1f1;border-radius:4px;}
 ::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:4px;}
 ::-webkit-scrollbar-thumb:hover{background:#a0a0a0;}
 
-/* print */
-@media print{.tabs,.export-float,.filter-row,.search{display:none!important;}.tab-panel{display:block!important;}.hdr{position:relative;}}
+@media print{.tabs,.filter-row,.search{display:none!important;}.tab-panel{display:block!important;}.hdr{position:relative;}}
 </style>
 </head>
 <body>
 
 <div class="hdr">
   <h1>📊 Future Q Backlog — Detailed Operations Dashboard</h1>
-  <div class="hdr-sub">Sum of Future Quarter Backlog &bull; By Project Manager, Customer, Service Type & Line Item &bull; Total: <strong>$58,649,611.10</strong></div>
+  <div class="hdr-sub">By Project Manager, Customer, Technology & Service Type &bull; Total: <strong>$58,649,611.10</strong></div>
 </div>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="showTab('overview')">📈 Executive Overview</button>
   <button class="tab-btn" onclick="showTab('pmview')">👤 PM Drill-Down</button>
   <button class="tab-btn" onclick="showTab('customers')">🏢 Customer Analysis</button>
-  <button class="tab-btn" onclick="showTab('services')">🔧 Service Mix</button>
+  <button class="tab-btn" onclick="showTab('services')">🔧 Technology & Service Mix</button>
   <button class="tab-btn" onclick="showTab('detail')">📋 Full Line-Item Detail</button>
 </div>
 
-<!-- ═══════════════════════════════════════════ TAB 1: OVERVIEW ═══════════════════════════════════════════ -->
+<!-- TAB 1: OVERVIEW -->
 <div class="tab-panel active" id="tab-overview">
-
   <div class="kpi-grid">
     <div class="kpi"><div class="kpi-label">Total Backlog</div><div class="kpi-val" style="color:var(--pri-d)">$58.65M</div><div class="kpi-note">$58,649,611.10</div></div>
-    <div class="kpi c2"><div class="kpi-label">Project Managers</div><div class="kpi-val" style="color:var(--ok)">99</div><div class="kpi-note">Active PMs with future backlog</div></div>
-    <div class="kpi c3"><div class="kpi-label">Total Projects</div><div class="kpi-val" style="color:var(--warn)">271</div><div class="kpi-note">Unique project / PR entries</div></div>
-    <div class="kpi c4"><div class="kpi-label">Line Items</div><div class="kpi-val" style="color:var(--acc)">396</div><div class="kpi-note">Individual billable milestones</div></div>
+    <div class="kpi c2"><div class="kpi-label">Project Managers</div><div class="kpi-val" style="color:var(--ok)">99</div><div class="kpi-note">Active PMs with backlog</div></div>
+    <div class="kpi c3"><div class="kpi-label">Line Items</div><div class="kpi-val" style="color:var(--warn)">396</div><div class="kpi-note">Individual billable entries</div></div>
+    <div class="kpi c4"><div class="kpi-label">Unique Customers</div><div class="kpi-val" style="color:var(--acc)">~140</div><div class="kpi-note">End-customer organizations</div></div>
     <div class="kpi c5"><div class="kpi-label">Largest PM</div><div class="kpi-val" style="color:var(--err)">$11.68M</div><div class="kpi-note">Willis Tanika (NSCALE)</div></div>
     <div class="kpi c6"><div class="kpi-label">Avg / PM</div><div class="kpi-val" style="color:var(--orange)">$592K</div><div class="kpi-note">Mean backlog per PM</div></div>
     <div class="kpi c7"><div class="kpi-label">Median / PM</div><div class="kpi-val" style="color:#8e44ad">$69K</div><div class="kpi-note">Significant top-heavy skew</div></div>
-    <div class="kpi c8"><div class="kpi-label">Unique Customers</div><div class="kpi-val" style="color:#1abc9c">~140</div><div class="kpi-note">End-customer organizations</div></div>
+    <div class="kpi c8"><div class="kpi-label">Top 5 PMs Share</div><div class="kpi-val" style="color:#1abc9c">61.8%</div><div class="kpi-note">$36.2M concentration</div></div>
   </div>
 
   <div class="g2">
-    <!-- TOP 15 PM BAR CHART -->
     <div class="panel">
       <h3><span class="icon">🏆</span> Top 15 PMs by Backlog</h3>
       <div id="topPmChart"></div>
     </div>
-
-    <!-- CONCENTRATION RISK -->
     <div class="panel">
       <h3><span class="icon">⚠️</span> Concentration & Risk Analysis</h3>
-      <div style="margin-bottom:14px;">
-        <div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 1 PM = 19.9% of Total Backlog</div>
-        <div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:19.9%;background:var(--err)"></div></div><div class="mini-pct">19.9%</div></div>
-      </div>
-      <div style="margin-bottom:14px;">
-        <div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 5 PMs = 61.8% of Total Backlog</div>
-        <div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:61.8%;background:var(--err)"></div></div><div class="mini-pct">61.8%</div></div>
-      </div>
-      <div style="margin-bottom:14px;">
-        <div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 10 PMs = 76.3% of Total Backlog</div>
-        <div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:76.3%;background:var(--orange)"></div></div><div class="mini-pct">76.3%</div></div>
-      </div>
-      <div style="margin-bottom:14px;">
-        <div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 20 PMs = 87.5% of Total Backlog</div>
-        <div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:87.5%;background:var(--warn)"></div></div><div class="mini-pct">87.5%</div></div>
-      </div>
-      <div style="margin-bottom:18px;">
-        <div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Remaining 79 PMs = 12.5% of Total Backlog</div>
-        <div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:12.5%;background:var(--ok)"></div></div><div class="mini-pct">12.5%</div></div>
-      </div>
+      <div style="margin-bottom:14px;"><div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 1 PM = 19.9%</div><div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:19.9%;background:var(--err)"></div></div><div class="mini-pct">19.9%</div></div></div>
+      <div style="margin-bottom:14px;"><div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 5 PMs = 61.8%</div><div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:61.8%;background:var(--err)"></div></div><div class="mini-pct">61.8%</div></div></div>
+      <div style="margin-bottom:14px;"><div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 10 PMs = 76.3%</div><div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:76.3%;background:var(--orange)"></div></div><div class="mini-pct">76.3%</div></div></div>
+      <div style="margin-bottom:14px;"><div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Top 20 PMs = 87.5%</div><div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:87.5%;background:var(--warn)"></div></div><div class="mini-pct">87.5%</div></div></div>
+      <div style="margin-bottom:18px;"><div style="font-size:12px;color:var(--mute);font-weight:600;margin-bottom:4px;">Remaining 79 PMs = 12.5%</div><div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:12.5%;background:var(--ok)"></div></div><div class="mini-pct">12.5%</div></div></div>
       <hr style="border:none;border-top:1px solid var(--bdr);margin:14px 0;">
       <div style="font-size:12px;line-height:1.8;">
-        <p>🔴 <strong>Critical:</strong> NSCALE cluster (Willis + Mohammed) = ~$17.8M (30.4%)</p>
-        <p>🟠 <strong>High Concentration:</strong> Financial Services (GS, BofA, HSBC, Bloomberg) = ~$10.8M</p>
-        <p>🟡 <strong>Healthcare Block:</strong> MGB, MSKCC, Cigna, CVS, HCA = ~$4.5M</p>
-        <p>🟢 <strong>Residency Programs:</strong> ~$15.4M locked in long-term engagements</p>
-        <p>🔵 <strong>Rack Integration / HPC:</strong> Jane Street, FluidStack, NSCALE = ~$22M</p>
+        <p>🔴 <strong>Critical:</strong> NSCALE (Willis + Mohammed) = ~$17.8M (30.4%)</p>
+        <p>🟠 <strong>Financial Services:</strong> GS, BofA, HSBC, Bloomberg = ~$10.8M</p>
+        <p>🟡 <strong>Healthcare:</strong> MGB, MSKCC, Cigna, CVS, HCA = ~$4.5M</p>
+        <p>🟢 <strong>Residency Programs:</strong> ~$15.4M in long-term engagements</p>
+        <p>🔵 <strong>Rack/HPC:</strong> Jane Street, FluidStack, NSCALE = ~$22M</p>
       </div>
     </div>
   </div>
 
-  <!-- TIER BREAKDOWN -->
   <div class="g2">
     <div class="panel">
-      <h3><span class="icon">📊</span> PM Backlog Tier Distribution</h3>
-      <table class="tbl" style="font-size:13px;">
-        <thead><tr><th>Tier</th><th>Range</th><th class="c"># PMs</th><th class="r">Sum Backlog</th><th class="r">% Total</th><th class="r">Avg / PM</th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge b-red">Mega</span></td><td>> $5M</td><td class="c bold">4</td><td class="r bold">$33,389,717</td><td class="r">56.9%</td><td class="r">$8,347,429</td></tr>
-          <tr><td><span class="badge b-orange">Large</span></td><td>$1M – $5M</td><td class="c bold">6</td><td class="r bold">$10,072,686</td><td class="r">17.2%</td><td class="r">$1,678,781</td></tr>
-          <tr><td><span class="badge b-yellow">Medium</span></td><td>$250K – $1M</td><td class="c bold">12</td><td class="r bold">$7,100,810</td><td class="r">12.1%</td><td class="r">$591,734</td></tr>
-          <tr><td><span class="badge b-green">Small</span></td><td>$50K – $250K</td><td class="c bold">37</td><td class="r bold">$5,882,792</td><td class="r">10.0%</td><td class="r">$158,997</td></tr>
-          <tr><td><span class="badge b-blue">Micro</span></td><td>< $50K</td><td class="c bold">40</td><td class="r bold">$2,203,606</td><td class="r">3.8%</td><td class="r">$55,090</td></tr>
-          <tr style="background:var(--pri-d);color:#fff;font-weight:700;"><td colspan="2">TOTAL</td><td class="c">99</td><td class="r">$58,649,611</td><td class="r">100%</td><td class="r">$592,420</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="panel">
-      <h3><span class="icon">💰</span> Top 10 Individual Projects by Value</h3>
+      <h3><span class="icon">📊</span> PM Tier Distribution</h3>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Project / Milestone</th><th>PM</th><th class="r">Value</th></tr></thead>
+        <thead><tr><th>Tier</th><th>Range</th><th class="c"># PMs</th><th class="r">Sum</th><th class="r">%</th><th class="r">Avg/PM</th></tr></thead>
         <tbody>
-          <tr><td class="c">1</td><td>NSCALE NC - Milestone 7 (Compute/Networking Racks Ph1)</td><td>Willis Tanika</td><td class="r bold">$8,085,800</td></tr>
-          <tr><td class="c">2</td><td>Residency - ADP/KLR Technology</td><td>Mohammed Afsar N.</td><td class="r bold">$2,794,621</td></tr>
-          <tr><td class="c">3</td><td>Residency - UPS PR-2104062</td><td>Udupa Shrinivasa</td><td class="r bold">$3,523,373</td></tr>
-          <tr><td class="c">4</td><td>NSCALE NC - Milestone 5 (Compute/Networking)</td><td>Willis Tanika</td><td class="r bold">$2,164,600</td></tr>
-          <tr><td class="c">5</td><td>Jane Street MS6 Inter-rack Cabling</td><td>Sawka William</td><td class="r bold">$3,185,563</td></tr>
-          <tr><td class="c">6</td><td>Jane Street MS7 Inter-rack Cabling</td><td>Sawka William</td><td class="r bold">$3,185,563</td></tr>
-          <tr><td class="c">7</td><td>AHEAD-SUMITOMO Milestone 9</td><td>Kay Joseph C</td><td class="r bold">$1,636,816</td></tr>
-          <tr><td class="c">8</td><td>Residency - WWT/Core42</td><td>Mohammed Afsar N.</td><td class="r bold">$1,600,000</td></tr>
-          <tr><td class="c">9</td><td>FluidStack 124 Racks - MS5</td><td>Faulkner John</td><td class="r bold">$1,566,100</td></tr>
-          <tr><td class="c">10</td><td>FluidStack 124 Racks - MS6</td><td>Faulkner John</td><td class="r bold">$1,566,100</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- QUICK SERVICE MIX -->
-  <div class="panel">
-    <h3><span class="icon">🔧</span> Backlog by Service Category (Estimated Breakdown)</h3>
-    <div class="stat-row">
-      <div class="stat-block"><div class="sv">$28.5M</div><div class="sl">Standard Milestones</div></div>
-      <div class="stat-block"><div class="sv">$15.4M</div><div class="sl">Residency Programs</div></div>
-      <div class="stat-block"><div class="sv">$8.9M</div><div class="sl">Rack Integration / HPC</div></div>
-      <div class="stat-block"><div class="sv">$2.4M</div><div class="sl">ProDeploy ADT</div></div>
-      <div class="stat-block"><div class="sv">$1.9M</div><div class="sl">Redemption / Migration</div></div>
-      <div class="stat-block"><div class="sv">$1.2M</div><div class="sl">Data Sanitization / Erasure</div></div>
-      <div class="stat-block"><div class="sv">$350K</div><div class="sl">Other / Unclassified</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════ TAB 2: PM DRILL-DOWN ═══════════════════════════════════════════ -->
-<div class="tab-panel" id="tab-pmview">
-  <div class="filter-row">
-    <input type="text" class="search" id="pmSearch" placeholder="🔍 Search PM name..." oninput="filterPMs()">
-    <select class="filter-select" id="pmTierFilter" onchange="filterPMs()">
-      <option value="">All Tiers</option>
-      <option value="mega">Mega (> $5M)</option>
-      <option value="large">Large ($1M – $5M)</option>
-      <option value="medium">Medium ($250K – $1M)</option>
-      <option value="small">Small ($50K – $250K)</option>
-      <option value="micro">Micro (< $50K)</option>
-    </select>
-    <button class="btn btn-out btn-sm" onclick="expandAll()">Expand All</button>
-    <button class="btn btn-out btn-sm" onclick="collapseAll()">Collapse All</button>
-    <span style="font-size:12px;color:var(--mute);margin-left:auto;" id="pmCount">Showing 99 PMs</span>
-  </div>
-  <div id="pmAccordion"></div>
-</div>
-
-<!-- ═══════════════════════════════════════════ TAB 3: CUSTOMER ANALYSIS ═══════════════════════════════════════════ -->
-<div class="tab-panel" id="tab-customers">
-  <div class="filter-row">
-    <input type="text" class="search" id="custSearch" placeholder="🔍 Search customer..." oninput="filterCustomers()">
-    <span style="font-size:12px;color:var(--mute);margin-left:auto;" id="custCount"></span>
-  </div>
-  <div class="panel">
-    <h3><span class="icon">🏢</span> Top 25 End Customers by Backlog Value</h3>
-    <div id="custChart"></div>
-  </div>
-  <div class="panel">
-    <h3><span class="icon">📋</span> Full Customer Backlog Table</h3>
-    <div class="tbl-wrap" id="custTableWrap"></div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════ TAB 4: SERVICE MIX ═══════════════════════════════════════════ -->
-<div class="tab-panel" id="tab-services">
-  <div class="panel">
-    <h3><span class="icon">🔧</span> Service Type Breakdown</h3>
-    <div class="g2">
-      <div>
-        <table class="tbl">
-          <thead><tr><th>Service Category</th><th class="r">Backlog</th><th class="r">% Total</th><th class="c"># Items</th></tr></thead>
-          <tbody id="svcTable"></tbody>
-        </table>
-      </div>
-      <div id="svcChart"></div>
-    </div>
-  </div>
-  <div class="panel">
-    <h3><span class="icon">📦</span> Product / Technology Focus Areas</h3>
-    <div class="stat-row" id="techBlocks"></div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════ TAB 5: FULL DETAIL ═══════════════════════════════════════════ -->
-<div class="tab-panel" id="tab-detail">
-  <div class="filter-row">
-    <input type="text" class="search" id="detailSearch" placeholder="🔍 Search across all fields..." oninput="filterDetail()">
-    <select class="filter-select" id="detailPmFilter" onchange="filterDetail()">
-      <option value="">All PMs</option>
-    </select>
-    <select class="filter-select" id="detailSvcFilter" onchange="filterDetail()">
-      <option value="">All Service Types</option>
-    </select>
-    <select class="filter-select" id="detailRangeFilter" onchange="filterDetail()">
-      <option value="">All Amounts</option>
-      <option value="1000000">$1M+</option>
-      <option value="500000">$500K+</option>
-      <option value="100000">$100K+</option>
-      <option value="50000">$50K+</option>
-      <option value="10000">$10K+</option>
-    </select>
-    <button class="btn btn-pri btn-sm" onclick="exportCSV()">📥 Export CSV</button>
-    <span style="font-size:12px;color:var(--mute);margin-left:auto;" id="detailCount"></span>
-  </div>
-  <div class="tbl-wrap">
-    <table class="tbl" id="detailTable">
-      <thead>
-        <tr>
-          <th onclick="sortDetail(0)">#</th>
-          <th onclick="sortDetail(1)">Project Manager</th>
-          <th onclick="sortDetail(2)">Project Name</th>
-          <th onclick="sortDetail(3)">Service / Milestone</th>
-          <th onclick="sortDetail(4)" class="r">Amount</th>
-          <th>Category</th>
-        </tr>
-      </thead>
-      <tbody id="detailBody"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="footer">
-  Future Q Backlog Dashboard &bull; Data as provided &bull; Dollar values are backlog amounts &bull; Dashboard auto-generated for operational review
-</div>
-
-<script>
-// ═══════════════════════════ COMPLETE DATA ═══════════════════════════
-const rawData = [
-[". Vaishakh","AHEAD LLC_SUMITOMO MITSUI BANKING_PR-3142940","Milestone",15684.31],
-[". Vaishakh","MYRIAD/MLB-ST-OEM_MLB OFFICE OF THE COMMISSION_PR-2859100","Milestone 1",0.12],
-[". Vaishakh","MYRIAD/MLB-ST-OEM_MLB OFFICE OF THE COMMISSION_PR-2871002","Milestone",0.12],
-["Abrego Abigail","CABLEVISION SYSTEMS CORP_PR-2451384 | DATA Domain","Milestone",12176.26],
-["Abrego Abigail","CABLEVISION SYSTEMS CORP_PR-2451392 | PowerScale Node","Milestone",19058.72],
-["Abrego Abigail","CABLEVISION SYSTEMS CORP_PR-3103510","Milestone",115317.51],
-["Abrego Abigail","CABLEVISION SYSTEMS CORP_PR-3103510","ProDeploy ADT: 4 Hours Remote Storage",10191.76],
-["Abrego Abigail","CABLEVISION SYSTEMS CORP_PR-3103510","ProDeploy ADT: 8 Hours Onsite Storage",14680.88],
-["Abrego Abigail","CABLEVISION SYSTEMS CORP_PR-3103510","ProDeploy ADT: 8 Hours Onsite PM",7910.68],
-["Abrego Abigail","SRD_PGTek_APPLIED TECHNOLOGY SERVICES_MD STATE POLICE_PR-3086826","Milestone",15319.36],
-["Abrego Abigail","SRD_PGTek_CABLEVISION SYSTEMS CORP_PR-3103512","Milestone",11697.83],
-["Acosta Genesis Edith","EPLUS TECHNOLOGY_HAMPTON ROADS TRANSIT_PR-3043934","Milestone",20591.69],
-["Acosta Genesis Edith","EPLUS TECHNOLOGY_HAMPTON ROADS TRANSIT_PR-3043934","ProDeploy ADT: 8 Hours Onsite PM",4130.60],
-["Acosta Genesis Edith","FUJIFILM HC AMERICAS CORP OEM_PR-2967626","Milestone",34476.33],
-["Acosta Genesis Edith","SRD_PGTek_EPLUS TECHNOLOGY_HAMPTON ROADS TRANSIT_PR-3041648","Milestone",17553.76],
-["Acosta Genesis Edith","SRD_PGTek_E-PLUS TECHNOLOGY_HAMPTON ROADS TRANSIT_PR-3043932","Milestone",18526.85],
-["Acosta Genesis Edith","SRD_PGTek_WEI_LIBERTY MUTUAL GROUP_PR-3068994","Milestone",22199.96],
-["Acosta Genesis Edith","SRD_PGTek_WEI_LIBERTY MUTUAL GROUP_PR-3082400","Milestone",55499.90],
-["Acosta Genesis Edith","WWT_LATITUDE SH_PR-3203244","ProDeploy ADT: 8 Hours Onsite Server",40545.76],
-["Ahmed Iftekhar(Iffy)","CHILDRENS NATIONAL MED CNTR STORAGE - HPC - PR-3165948","Milestone",9319.62],
-["Ahmed Iftekhar(Iffy)","CHILDRENS NATIONAL MED CNTR STORAGE - HPC - PR-3165948","ProDeploy ADT: 8 Hours Onsite Server",10136.40],
-["Ahmed Iftekhar(Iffy)","CHILDRENS NATIONAL MED CNTR STORAGE - HPC - PR-3165948","ProDeploy ADT: 8 Hours Onsite Storage",18746.00],
-["Ahmed Iftekhar(Iffy)","CHILDRENS NATIONAL MED CNTR STORAGE - HPC - PR-3165948","ProDeploy ADT: 8 Hours Onsite PM",12391.80],
-["Ahmed Iftekhar(Iffy)","GE VERNOVA INTERNATIONAL LLC XE9780 ADD ON - HPC - PR-3144308","Milestone",10736.60],
-["Alexander Robert","ARC-DMP-PEPS PR-3003654","Milestone",28416.74],
-["Alexander Robert","ARC-DMP-PEPS PR-3003654","ProDeploy ADT: 8 Hours Onsite PM",5163.24],
-["Arispe Adrian","AMERISOURCEBERGEN_PR-3156686","Milestone",21538.99],
-["Arispe Adrian","CONTINENTAL GRAIN CO_PR-2799792","Milestone",8010.75],
-["Arispe Adrian","SRD_TekSystems_AHEAD_CLARIOS_PR-2976224","Milestone",8182.69],
-["Baker Ruth","ECHOSTOR TECHNOLOGIES_HARVARD PUBLIC HEALTH_PR-3197014","Milestone",45341.80],
-["Baker Ruth","ECHOSTOR TECHNOLOGIES_HARVARD PUBLIC HEALTH_PR-3197014","ProDeploy ADT: 8 Hours Onsite DP",6445.42],
-["Baker Ruth","EVT / ENTERPRISE VISION TECHNO_CLOUDWAVE_PR-3236046","Milestone",25947.28],
-["Baker Ruth","EVT / ENTERPRISE VISION TECHNO_CLOUDWAVE_PR-3236046","ProDeploy ADT: 8 Hours Onsite Storage",3167.63],
-["Baker Ruth","OUTSEER_PR-3168258","Milestone",26242.92],
-["Baker Ruth","OUTSEER_PR-3168258","ProDeploy ADT: 8 Hours Onsite DP",7251.09],
-["Baker Ruth","SRD_PGTek_OUTSEER_PR-3168272 - DD6410 Install","Milestone",15712.39],
-["Baliache Kenny","SRD_PGTek_ARROW AIS - OEM_PHILIPS HC INFORMATICS-OEM_PR-3120624","Milestone",15319.36],
-["Baliache Kenny","SRD_PGTek_EQUINIX DATA CENTER_PR-3203292","Milestone",7659.68],
-["Baumgardner Jeffery M","ECHOSTOR TECHNOLOGIES_ELLIOT HOSPITAL/SOLUTIONHEALTH_PR-3225740","Milestone",3845.00],
-["Baumgardner Jeffery M","ECHOSTOR TECHNOLOGIES_ELLIOT HOSPITAL/SOLUTIONHEALTH_PR-3225740","ProDeploy ADT: 8 Hours Onsite DP",3222.71],
-["Baumgardner Jeffery M","INTERSYSTEMS CORP // CENTERSQUARE_PR-2842480","Milestone",408554.47],
-["Baumgardner Jeffery M","INTERSYSTEMS CORP // CENTERSQUARE_PR-2842482","Milestone",252990.75],
-["Bhiku Zeinab","COMPUTACENTER US_PAUL, WEISS, RIFKIND ET AL_PR-2894922","Milestone",33011.89],
-["Blanco Jose Jesus","CENCORA_PR-3021024","Milestone",46557.65],
-["Blanco Jose Jesus","CENCORA_PR-3252548","Milestone",19232.60],
-["Brodeur Jr. George Paul","COUNTY OF HUDSON_PR-2458196","Milestone",41160.01],
-["Brophy Paul E.","F3 TECHNOLOGY PARTNERS_CIGNA CORP_PR-2798098","Milestone",88599.25],
-["Brophy Paul E.","F3 TECHNOLOGY PARTNERS_CIGNA CORP_PR-2798100","Milestone",19081.86],
-["Brown Danielle","FLUIDSTACK INC_PR-3074650","Milestone",21150.24],
-["Brown Danielle","GE AEROSPACE -Data Domain - Cincinnati_PR-2864146","Milestone",42336.00],
-["Brown Danielle","GE AEROSPACE_Huntsville, AL - PS Upgrade -PR-3151426","ProDeploy ADT: 8 Hours Onsite Storage",9373.00],
-["Brown Danielle","GE AEROSPACE_Huntsville, AL - PS Upgrade -PR-3151426","ProDeploy ADT: 8 Hours Onsite PM",2065.29],
-["Brown Danielle","SUSQUEHANNA INTL GROUP LLP_PR-2520182","Milestone",62713.02],
-["Brown Danielle","SUSQUEHANNA INTL GROUP LLP_PR-3243652","Milestone",22051.20],
-["Brown Danielle","VIRTU FINANCIAL LLC_PR-2684560","Milestone",30244.56],
-["Brown Zuaneth Nachalia","SRD_PGTek_SANOFI US SERVICES INC_PR-3229658","Milestone",8967.22],
-["Caballero Oriel","AHEAD, INC_FEDERAL HOME LOAN BANK OF PITTSBURGH_PR-2796820","Milestone",5372.44],
-["Caballero Oriel","SILEX DATA SOLUTIONS_HCA HEALTHCARE_FORT WORTH_PR-3195254","Milestone",115600.43],
-["Caballero Oriel","SRD_PGTek_SILEX DATA SOLUTIONS_HCA HEALTHCARE_CROSSINGS_PR-3195252","Milestone",167292.59],
-["Camacho Isury Estibalis","CDW LOGISTICS INC_HCA N CAROLINA DIV - DART POIN_PR-3249388","Milestone",24955.59],
-["Camacho Isury Estibalis","CITY OF RICHMOND - DIT_PR-3039064","Milestone",11535.00],
-["Camacho Isury Estibalis","MD MOTOR VEHICLE ADMINISTRATIO_PR-3056202","Milestone",14526.26],
-["Camacho Isury Estibalis","SAFETY INSURANCE CO_PR-3102108","Data Sanitization",8000.00],
-["Camacho Isury Estibalis","SAFETY INSURANCE CO_PR-3102108","Milestone",13117.88],
-["Camacho Isury Estibalis","SRD_Peak_SIDEPATH INC_SKYWORKS SOLUTIONS_PR-3160422","Milestone",3829.84],
-["Camacho Isury Estibalis","SRD_PGTek_PHILADELPHIA GAS WORKS_PR-3133112","Milestone",3518.25],
-["Caraballo Emanuel","COMPUTERSHARE TECHNOLOGY SERVS_PR-3096332","Data Sanitization",28800.00],
-["Caraballo Emanuel","COMPUTERSHARE TECHNOLOGY SERVS_PR-3096332","Milestone",77538.24],
-["Caraballo Emanuel","PGTek_NJ OFFICE OF INFO TECH_PR-2451308 (VCF)","ProDeploy ADT: 8 Hours Onsite HCI",12107.84],
-["Caraballo Emanuel","PGTek_NJ OFFICE OF INFO TECH_PR-2451308 (VCF)","ProDeploy ADT: 8 Hours Onsite PM",2613.75],
-["Caraballo Emanuel","SRD_PGTek_Peak_TATA COMMUNICATIONS AMERICA_PR-2951494","Milestone",22254.48],
-["Castro Alex Virgilio","(SRD) PGTek - Rutland Regional Medical Center_PR-3028114","Milestone",35182.50],
-["Castro Alex Virgilio","Aveda_PR-3031714 (ELC Related) Blaine, MN","Milestone",25846.08],
-["Castro Alex Virgilio","MassMutual_PR-3130192 - (2) FCs at CyrusOne (Virginia)","Milestone",17635.20],
-["Castro Alex Virgilio","MassMutual_PR-3168738 - (2) FCs at Flexential (Colorado)","Milestone",9765.70],
-["Castro Alex Virgilio","MERCK SHARP & DOHME LLC_PR-2899384","Milestone",28738.50],
-["Castro Alex Virgilio","MERCK_PR-3056334 - DDVE, Basic for Servers","Milestone",5372.44],
-["Castro Alex Virgilio","RIVIER UNIV_PR-3109424 - PPBS Configuration","Milestone",6981.00],
-["Chandeck Erich","ECHOSTOR TECHNOLOGIES_MIT_PR-3188216","Milestone",5106.46],
-["Chandeck Erich","ECHOSTOR TECHNOLOGIES_MIT_PR-3188216","ProDeploy ADT: 8 Hours Onsite Storage",3124.33],
-["Chandeck Erich","ECHOSTOR TECHNOLOGIES_MIT_PR-3188216","ProDeploy ADT: 8 Hours Onsite PM",2753.73],
-["Chandeck Erich","ECHOSTOR TECHNOLOGIES_MIT_PR-3188218","Milestone",5106.46],
-["Chandeck Erich","ECHOSTOR TECHNOLOGIES_MIT_PR-3188218","ProDeploy ADT: 8 Hours Onsite Storage",3124.33],
-["Chandeck Erich","ECHOSTOR TECHNOLOGIES_MIT_PR-3188218","ProDeploy ADT: 8 Hours Onsite PM",2753.73],
-["Chandeck Erich","PRESIDIO NETWORKED_WEST PHARMACEUTICAL SERVICES_PR-3225570","Milestone",169315.33],
-["Chandeck Erich","PRESIDIO NETWORKED_WEST PHARMACEUTICAL SERVICES_PR-3225570","ProDeploy ADT: 4 Hours Remote DP",1073.16],
-["Chandeck Erich","PRESIDIO NETWORKED_WEST PHARMACEUTICAL SERVICES_PR-3225570","ProDeploy ADT: 8 Hours Onsite DP",20716.80],
-["Chandeck Erich","SOLSTICE ADVANCED MATERIALS_PR-3209228","Milestone",54523.49],
-["Chandeck Erich","SRD_PGTek_DATAPIVOT TECHNOLOGIES_RHODE ISLAND COLLEGE_PR-3120628","Milestone",21124.77],
-["Chandeck Erich","WORLD WIDE TECHNOLOGY_MERCK & CO_PR-3211958","Milestone",7614.64],
-["Chauhan Sukanya","CORNING INC_PR-3011464","Milestone",2098.11],
-["Chauhan Sukanya","SHI INTL CORP_ANALOG DEVICES INC_PR-3124542","Milestone",1344.54],
-["Choudhary Sanjay","AHEAD_MA-S BOSTON MEDICAL CENTER_PR-3176704","Data Sanitization",8000.00],
-["Choudhary Sanjay","CDW LOGISTICS LLC_CAMBRIDGE SYSTEMATICS_PR-3164026","Milestone",20769.00],
-["Choudhary Sanjay","CDW LOGISTICS LLC_CAMBRIDGE SYSTEMATICS_PR-3164026","ProDeploy ADT: 4 Hours Remote DP",1073.16],
-["Choudhary Sanjay","CINCINNATI BELL TECH SOLUTIONS_MASSIT_PR-3179810","Milestone",7170.88],
-["Choudhary Sanjay","COMPUTACENTER US / EXL_EXLSERVICE COM_PR-2840730","Milestone",2588.23],
-["Choudhary Sanjay","CONVERGE TECHNOLOGY SOLUTIONS_SANTANDER N A_PR-3183756","ProDeploy ADT: 8 Hours Onsite DP",12890.84],
-["Choudhary Sanjay","CONVERGE TECHNOLOGY SOLUTIONS_SANTANDER N A_PR-3183756","ProDeploy ADT: 8 Hours Onsite PM",2753.73],
-["Choudhary Sanjay","ECHOSTOR TECHNOLOGIES_BETH ISRAEL LAHEY HEALTH_PR-3219498","Data Sanitization",3770.08],
-["Choudhary Sanjay","HCL AMERICA INC_VOLVO TRUCKS NORTH AMERICA_PR-3127570","Milestone",21183.05],
-["Choudhary Sanjay","INGRAM MICRO INC_SANTANDER BANK_PR-3051112","ProDeploy ADT: 8 Hours Onsite DP",24170.30],
-["Choudhary Sanjay","PRESIDIO NETWORKED_MASSACHUSETTS PORT AUTHORITY_PR-3246186","Milestone",18064.00],
-["Choudhary Sanjay","PRESIDIO NETWORKED_PRELUDE SERVICES_PR-3157016","Milestone",4866.00],
-["Choudhary Sanjay","Redemption_CONVERGE TECHNOLOGY_SANTANDER N A_PR-3057364","Redemption",77418.00],
-["Choudhary Sanjay","UNIV OF VIRGINIA_PR-3134746","Milestone",3665.02],
-["Choudhary Sanjay","UNIV OF VIRGINIA_PR-3157054","Milestone",6549.28],
-["Choudhary Sanjay","VA DEPT OF GENERAL SERVICES_PR-3185800","Milestone",8700.54],
-["Corrales Iván Andres","LGH_REPLACEMENT_SRD_PGTek_WEI_TUFTS MEDICINE_PR-3184968","Milestone",14799.96],
-["Corrales Iván Andres","SRD_PGTek_CDW LOGISTICS LLC_DIXIE ELECTRIC POWER ASSOC_PR-3008000","Milestone",18691.68],
-["Corrales Iván Andres","SRD_PGTek_ECHOSTOR_BRACEBRIDGE CAPITAL_PR-3225554","Milestone",25846.08],
-["Corrales Iván Andres","SRD_PGTek_ECHOSTOR_BRACEBRIDGE CAPITAL_PR-3225556","Milestone",64979.10],
-["Cronk Christopher","ADVISOR360, LLC_PR-3168286 - Pmax migration","Migration/Other",54067.44],
-["Cronk Christopher","BANK OF AMERICA_PR-3020044 XE9780-B300-26 GenAI","Milestone",5748.42],
-["Cronk Christopher","BANK OF AMERICA_PR-3020044 XE9780-B300-26 GenAI","ProDeploy ADT: 8 Hours Onsite Server",32943.43],
-["Cronk Christopher","GOLDMAN SACHS - ETP_PR-3175360","Milestone",7350.40],
-["Cronk Christopher","GOLDMAN SACHS PROPERTY MGMT_PR-2868094 - Head Swap DD 9910 BDC","Milestone",109836.00],
-["Cronk Christopher","GOLDMAN SACHS PROPERTY MGMT_PR-2868110 - Head Swap DD 9910 CDC","Milestone",96106.50],
-["Crowson Christopher","SRD_PGTek_ALTMAN SOLON_PR-3174092","Milestone",6453.80],
-["Crowson Christopher","SRD_PGTek_ARRAYA SOLUTIONS_ASSET WORKS INC_PR-3149484","Milestone",8875.67],
-["Crowson Christopher","SRD_PGTek_CDW LOGISTICS_ST LUKES HEALTH NETWORK_PR-3133232","Milestone",21061.06],
-["Crowson Christopher","SRD_PGTek_CHRISTIAN BROADCASTING NETWORK_PR-3173980","Milestone",12907.60],
-["Crowson Christopher","SRD_PGTek_Peak_BAIN_PR-3156476","Milestone",19361.40],
-["Crowson Christopher","SRD_PGTek_PRESIDIO NETWORKED_EVAPCO INC_PR-3153522","Milestone",7076.92],
-["Crowson Christopher","SRD_PGTek_VERISIGN_PR-3244502","Milestone",6356.51],
-["Crowson Christopher","SRD_TekSystems_CATERPILLAR_PR-3158038","Milestone",3226.90],
-["Crowson Christopher","SRD_TekSystems_CDW LOGISTICS_SMITH & NEPHEW_PR-3151210","Milestone",9680.70],
-["Crowson Christopher","SRD_TekSystems_CDW LOGISTICS_SMITH & NEPHEW_PR-3143380","Milestone",30288.34],
-["DeLuca Charles 0","INSIGHT_IQVIA_PR-2941022","Milestone",44102.40],
-["DeLuca Charles 0","JOHNS HOPKINS UNIV – ARCH_PR-3208656","Milestone",62311.52],
-["DeLuca Charles 0","JOHNS HOPKINS UNIV – ARCH_PR-3208656","ProDeploy ADT: 8 Hours Onsite Server",20061.65],
-["DeLuca Charles 0","Wave 2-XE9780L-Johns Hopkins-ARCH-PR-3022362","Milestone",63804.18],
-["DeLuca Charles 0","Wave 2-XE9780L-Johns Hopkins-ARCH-PR-3022362","ProDeploy ADT: 8 Hours Onsite Server",32098.64],
-["DeLuca Charles 0","Wave 2-XE9780L-Johns Hopkins-ARCH-PR-3022362","ProDeploy ADT: 8 Hours Onsite PM",14715.24],
-["DeLuca Charles 0","Wave 2-XE9780L-Johns Hopkins-ARCH-PR-3022362","Other",30409.43],
-["Diaz Gabriela","FIS_PR-3142950","Milestone",38338.30],
-["Diaz Gabriela","MEREDITH VILLAGE SAVINGS BANK_PR-3258706","Milestone",32543.68],
-["Diaz Gabriela","PC CONNECTION_MEREDITH VILLAGE SAVINGS BANK_PR-3176900","Milestone",7331.25],
-["Domingos Ana Cristina","ADVIZEX TECHNOLOGIES_HIGHMARK INC_PR-3119864","Milestone",13381.02],
-["Dube Katelyn E","AHEAD INC_MGB 15 XE Servers_PR-3042722","Milestone",97440.16],
-["Dube Katelyn E","AHEAD_MGB_Powerscale 48 F710s_PR-3027612","Milestone",93648.48],
-["Dube Katelyn E","FUTURE TECH ENTERPRISE_BWX TECHNOLOGIES_PR-3063828","Milestone",10575.12],
-["Dube Katelyn E","JANE STREET GROUP_PR-3160724","Milestone",11970.41],
-["Dube Katelyn E","MGB Powerstore IQL_PR-3229000","Milestone",9572.02],
-["Dube Katelyn E","MGB_CambComp 3 servers_PR-3168786","Milestone",22051.20],
-["Dube Katelyn E","MGB_CambComp_4 3U Servers_PR-3205092","Milestone",29401.60],
-["Dube Katelyn E","MGB_GP3 (6)A3100s_PR-3111896","Data Sanitization",2600.00],
-["Dube Katelyn E","MGB_GP3 (6)A3100s_PR-3111896","Milestone",50985.23],
-["Dube Katelyn E","MGB_GP4 (6)A3100 Nodes + Erasure_PR-3117124","Data Sanitization",2600.00],
-["Dube Katelyn E","MGB_MEEI1 + 2 Erasures_PR-3071140","Data Sanitization",5600.00],
-["Dube Katelyn E","MGB_MEEI1 + 2 Erasures_PR-3071140","Milestone",16045.95],
-["Dube Katelyn E","MGB_Versity Powerscale 4 A3100s_PR-3147710","Milestone",35397.48],
-["Dube Katelyn E","MGB_Versity Servers(3+1)_PR-3160504","Milestone",12907.60],
-["Dwyer Radcliffe","ECHOSTOR TECHNOLOGIES_ANALOG DEVICES INC_PR-3139936","Milestone",7350.40],
-["Elsinger Lisa M","BETH ISRAEL LAHEY HEALTH_PR-3217184_ Drive Upgrade","Milestone",7073.01],
-["Elsinger Lisa M","BIHL_ Engine Upgrade #1_PR-3164024_Burlington","Milestone",23649.77],
-["Elsinger Lisa M","BIHL_Engine Upgrade #2_PR-3175820_ Burlington","Milestone",29442.58],
-["Elsinger Lisa M","BIHL_PR-3164094_ Engine Upgrade #1_ Boston","Milestone",23649.77],
-["Elsinger Lisa M","BIHL_Upgrade #2_PR-3175818_ Boston","Milestone",29442.58],
-["Elsinger Lisa M","CIGNA CORP_PR-2821980","Milestone",3123.44],
-["Elsinger Lisa M","CIGNA_PR-2795872_ DE ECS","Milestone",12800.00],
-["Elsinger Lisa M","CIGNA_PR-2796812_ECS Node Add PISC","Milestone",11590.55],
-["Elsinger Lisa M","CIGNA_PR-2796814_ DE ECS","Milestone",12800.00],
-["Elsinger Lisa M","CIGNA_PR-2796816_ECS Blocks","Milestone",15838.15],
-["Elsinger Lisa M","CIGNA_PR-3142238_DD9910s_4 Sites_ Refresh","Milestone",67369.50],
-["Elsinger Lisa M","CONVERGE TECHNOLOGY_MEMORIAL SLOAN-KETTERING_PR-3083108","Milestone",22051.20],
-["Elsinger Lisa M","CVS Data Erasures_SOW_PR-3028912","Data Sanitization",87308.70],
-["Elsinger Lisa M","MSK ECS2 IRIS2_PR-3020808","Milestone - MDC 1",37089.60],
-["Elsinger Lisa M","MSK ECS2 IRIS2_PR-3020808","Milestone - MDC 2",18544.80],
-["Elsinger Lisa M","MSK ECS2 IRIS2_PR-3020808","Milestone - SDC 1",37089.60],
-["Elsinger Lisa M","MSK ECS2 IRIS2_PR-3020808","Milestone - SDC 2",18544.80],
-["Elsinger Lisa M","MSK XE servers_PR-3007884","Milestone",44102.40],
-["Elsinger Lisa M","MSK_PR-3191244_X7700 Nodes","Milestone",92724.00],
-["Elsinger Lisa M","MSKCC_PR-3142246_DD9910 Refreshes","Milestone",72155.25],
-["Elsinger Lisa M","MSKCC_PR-3147788_Powerscale Nodes","Milestone",103384.32],
-["Elsinger Lisa M","MSKCC_PR-3147788_Powerscale Nodes","ProDeploy ADT: 8 Hours Onsite Storage",6335.26],
-["Elsinger Lisa M","MSKCC_PR-3147788_Powerscale Nodes","ProDeploy ADT: 8 Hours Onsite PM",4130.60],
-["Elsinger Lisa M","SRD_PGTek_CIGNA_PR-3019922","Milestone",24922.24],
-["Elsinger Lisa M","TD SYNNEX CORP_CIGNA CORP_PR-2598054","Milestone",3429.82],
-["Elsinger Lisa M","TOWER RESEARCH TAX EXEMPT_PR-3208790","Milestone",183383.48],
-["Elsinger Lisa M","TOWER RESEARCH TAX EXEMPT_PR-3208790","Other",133966.92],
-["Elsinger Lisa M","TOWER RESEARCH TAX EXEMPT_PR-3208792","Milestone",5292.22],
-["Elsinger Lisa M","TOWER RESEARCH TAX EXEMPT_PR-3208792","Other",5053.78],
-["Elsinger Lisa M","TRAVELERS_PR-3191138_Powerscale Nodes Windsor","Milestone",37592.99],
-["Elsinger Lisa M","TRAVELERS_PR-3191138_Powerscale Nodes Windsor","ProDeploy ADT: 8 Hours Onsite Storage",9502.89],
-["Elsinger Lisa M","TRAVELERS INDEMNITY CO_PR-2985110","Data Sanitization",10880.00],
-["Elsinger Lisa M","TRAVELERS INDEMNITY CO_PR-3141298_ Data Erasures","Data Sanitization",16667.50],
-["Elsinger Lisa M","TRAVELERS_PR-3052442_PMax Install_ Omaha","Milestone",40479.66],
-["Elsinger Lisa M","TRAVELERS_PR-3052444_Node Adds_ Omaha","Milestone",25376.88],
-["Faulkner John","FLUIDSTACK INC_124 Racks_PR-3028010","Rack Integration - MS5",1566100.00],
-["Faulkner John","FLUIDSTACK INC_124 Racks_PR-3028010","Rack Integration - MS6",1566100.00],
-["Faulkner John","TOWER RESEARCH CAPITAL_PR-2925054 M7725","Milestone",7629.75],
-["Faulkner John","TOWER RESEARCH CAPITAL_PR-2931696 M7725","Milestone",31733.25],
-["Faulkner John","TOWER RESEARCH CAPITAL_PR-2979842 M7725 Rack Integration","Milestone",1346.12],
-["Faulkner John","TOWER RESEARCH TAX EXEMPT_PR-2924958 - 8 B200 Racks","Milestone",23865.00],
-["Fienning Gregory","HRT PowerScale SRD_TekSystems PR-3125382","Milestone",19149.20],
-["Fienning Gregory","Hudson River Trading (HRT) PowerScale PR-2511190","Milestone",19510.10],
-["Financial Force","CARVERBETH_PR-3255022","Milestone",2829.75],
-["Financial Force","NORTHEASTERN UNIV_PR-3254128","Milestone",9800.53],
-["Financial Force","SRD_PGTek_CONNECTION_EVAPCO_PR-3256404","Milestone",8846.15],
-["Financial Force","SRD_PGTek_FAIRFAX RADIOLOGY_PR-3254168","Milestone",11127.24],
-["Financial Force","STE MRAS_PR-3254902","Milestone",7418.16],
-["Financial Force","WALGREEN CO_PR-3255098","Data Sanitization",19200.00],
-["Gagliardi Sophia","SRD_PGTek_CITY OF LYNCHBURG_PR-3255072","Milestone",5054.94],
-["Gagliardi Sophia","SRD_PGTek_DATAPIVOT TECH_CCRI_PR-3238528","Milestone",18545.40],
-["Gagliardi Sophia","SRD_PGTek_EVERFOX HOLDINGS LLC_PR-3249098","Milestone",19069.53],
-["Gagliardi Sophia","SRD_PGTek_FORDS COLONY HOA_PR-3113978","Milestone",3226.90],
-["Gibbs Lisa Patrice","Mainline-Fiserv VM Migration Program - Deploy_PR-3081496","Migration/Other",581235.20],
-["Gonzalez Maria del Carmen","AHEAD INC_FUJIFILM DIOSYNTH BIOTECH_PR-2921826_NC","Milestone",33381.72],
-["Gonzalez Maria del Carmen","CDW LOGISTICS LLC_CBS_PR-3152932","Milestone",4501.50],
-["Gonzalez Maria del Carmen","CDW LOGISTICS LLC_INSMED INC_PR-2838776","Milestone",14793.00],
-["Gonzalez Maria del Carmen","FUJIFILM DIOSYNTH BIOTECH_PR-2902586_PD","Milestone",4423.07],
-["Gonzalez Maria del Carmen","HIGH PERFORMANCE TECHNOLOGIES_FUJIFILM DIOSYNTH_PR-2681648","Milestone",20986.32],
-["Gonzalez Maria del Carmen","HIGH PERFORMANCE TECHNOLOGIES_FUJIFILM HOLDINGS_PR-2905570","Milestone",9518.25],
-["Gonzalez Maria del Carmen","SRD_Peak_HPT_FUJIFILM DIOSYNTH BIOTECH_PR-2904660","Milestone",8182.69],
-["Gonzalez Maria del Carmen","SRD_Peak_HPT_FUJIFILM NORTH AMERICA CORP_PR-2931748","Milestone",8182.69],
-["Gonzalez Maria del Carmen","SRD_PGTek_XBYTE_PARKER OIL_PR-3013492","Milestone",6356.51],
-["Guteta Ray Njeru","GOLDMAN SACHS_PR-2633984","Redemption/Other",85042.98],
-["Gutierrez Joe Lewis","COMPUTACENTER US_HSBC BANK USA_PR-3063110 ADT","ProDeploy ADT: 8 Hours Onsite PM",41305.95],
-["Gutierrez Joe Lewis","COMPUTACENTER US_HSBC BANK USA_PR-3196326 ADT","ProDeploy ADT: 8 Hours Onsite Networking",40545.48],
-["Gutierrez Joe Lewis","COMPUTACENTER US_HSBC BANK USA_PR-3196326 ADT","ProDeploy ADT: 8 Hours Onsite PM",151454.60],
-["Gutierrez Joe Lewis","HSBC BANK USA_PR-3133374 - POWERMAX AUG","Milestone",61153.56],
-["Gutierrez Joe Lewis","HSBC BANK USA_PR-3215986 ECS","Milestone",4636.20],
-["Gutierrez Joe Lewis","HSBC BANK USA_PR-3215986 ECS","ProDeploy ADT: 8 Hours Onsite Storage",19005.78],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS02",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS03",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS04",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS05",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS06",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS07",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS08",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS09",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS10",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS11",163605.54],
-["Gutierrez Joe Lewis","Redemption_WWT_BANK OF AMERICA_PR-3139864 - PowerMax Mig","Redemption MS12",155246.10],
-["Gutierrez Joe Lewis","SRD_PGTek_WWT_PFIZER_PR-3033446 PowerStore","Milestone",19144.04],
-["Gutierrez Joe Lewis","WORLD WIDE TECHNOLOGY_HSBC BANK USA_PR-3083518 CON FC","Milestone",478472.20],
-["Gutierrez Joe Lewis","WWT/PFIZER_PR-2980624 PowerStore 500T","Milestone",12819.04],
-["Jacobs Scott","FLEXCOMPUTE INC_PR-3031326","Other",82249.56],
-["Jacobs Scott","FLEXCOMPUTE INC_PR-3031328","Other",191008.18],
-["Jacobs Scott","HARVARD UNIV PR-3151490","Milestone",672.00],
-["Jacobs Scott","HARVARD UNIV PR-3157020","Milestone",11193.71],
-["Jacobs Scott","HARVARD UNIV PR-3208696","Milestone",65591.05],
-["Jacobs Scott","HARVARD UNIV PR-3208698","Milestone",3573.53],
-["Jacobs Scott","MIT-MGHPCC-CAMBRIDGE(3RD)_PR-3208766","Milestone",29190.56],
-["Jacobs Scott","MIT-MGHPCC-CAMBRIDGE(3RD)_PR-3208766","ProDeploy ADT: 8 Hours Onsite Server",8447.02],
-["Jacobs Scott","MIT-MGHPCC-CAMBRIDGE(4TH)_PR-3208768","Milestone",1625.72],
-["Jena Priyanka","AGFA_NORTHERN LIGHT HEALTH_PR-3085442","Milestone",10756.32],
-["Jena Priyanka","ARROW_PHILIPS_PR-3196932","Milestone",3180.00],
-["Jena Priyanka","CAROUSEL_ARBELLA INSURANCE GROUP_PR-3111964","Milestone",1344.54],
-["Jena Priyanka","PRESIDIO NETWORKED_DUPONT_PR-3245858","Milestone",1545.46],
-["Jena Priyanka","T ROWE PRICE ASSOC INC_PR-3196340","Data Sanitization",31600.00],
-["Jena Priyanka","T ROWE PRICE ASSOC INC_PR-3223168","Data Sanitization",13334.00],
-["Jena Priyanka","T ROWE PRICE_PR-3196390","Data Sanitization",16000.00],
-["Jena Priyanka","VA POLYTECH INST & ST UNIV_PR-3145476","Milestone",288.60],
-["K Ishan","REMDCM GOLDMAN SACHS_PR-3210736","Redemption/Other",231214.68],
-["Kashyap Naren","JOHNSON MIRMIRAN & THOMPSON_PR-3246178","Milestone",4048.02],
-["Kashyap Naren","SHI INTL CORP_CIENA CORP_PR-3162200","Milestone",4786.01],
-["Kaushal Malvika","Residency | BANK OF AMERICA_PR-2810894","Residency MS11",101063.50],
-["Kaushal Malvika","Residency | BANK OF AMERICA_PR-2810894","Residency MS12",101063.50],
-["Kaushal Malvika","Residency | BANK OF AMERICA_PR-2809716","Residency Nov",23468.00],
-["Kaushal Malvika","Residency | BANK OF AMERICA_PR-2809716","Residency Dec",23469.00],
-["Kaushal Malvika","Residency | ECHOSTOR_FRESENIUS_PR-2515242 Storage Migration","Residency",295512.88],
-["Kaushal Malvika","Residency | GOLDMAN SACHS_PR-2863714 DPS","Residency MS4",83247.10],
-["Kaushal Malvika","Residency | GOLDMAN SACHS_PR-2863724 ECS","Residency MS4",57743.66],
-["Kaushal Malvika","Residency | MASS GENERAL BRIGHAM_PR-3111900","Residency",7920.36],
-["Kaushal Malvika","Residency | MASS GENERAL BRIGHAM_PR-3117126","Residency",7920.36],
-["Kaushal Malvika","Residency | Partners Health | MGB_PR-2875012","Residency",215400.00],
-["Kaushal Malvika","Residency Cancelled | NOKIA_PR-3156500","Residency",6190.02],
-["Kaushal Malvika","Residency | STATE STREET BANK PFLEX 2026_PR-2851722","Residency",108038.04],
-["Kaushal Malvika","RF: STATE STREET BANK_PR-2867780 DAAS Extension","Residency",65457.90],
-["Kaushal Malvika","RF: MGB_RemotePowerscale_PR-2847476","Residency",19800.90],
-["Kaushal Malvika","RF: ERGONOMIC GROUP_MGB_PR-2857390","Residency",19800.90],
-["Kaushal Malvika","RF: PARTNERS HEALTHCARE Zakir-5_PR-2561150","Residency",22467.90],
-["Kaushal Malvika","RF: PARTNERS HEALTHCARE Zakir-4_PR-2560844","Residency",22957.85],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS1","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS2","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS3","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS4","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS5","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS6","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS7","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS8","Residency",20000.00],
-["Kaushal Malvika","RF: GOLDMAN SACHS_PR-2871730_Reserve MS9","Residency",20000.00],
-["Kay Joseph C","AHEAD INC_SUMITOMO MITSUI BANKING_PR-3138128","Milestone",172434.76],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","Milestone MS10",323226.63],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","Milestone MS11",12962.93],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","Milestone MS6",57618.60],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","Milestone MS7",50024.20],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","Milestone MS8",261368.73],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","Milestone MS9",1636816.18],
-["Kay Joseph C","AHEAD-SUMITOMO MITSUI BANKING DPC DAP_PR-2898012","ProDeploy ADT: 8 Hours Onsite Storage",5858.12],
-["Kay Joseph C","PR-3219606 ANALYSIS GROUP ECONOMICS (ECHOSTOR)","Milestone",44257.28],
-["KB Bhoomika","BOSE CORP_PR-3197562","Milestone",672.27],
-["KB Bhoomika","EASTER COMPUTER EXCHANGE_BRISTOL MYERS SQUIBB_PR-3210596","Milestone",8067.24],
-["KB Bhoomika","EASTERN COMPUTER EXCHANGE_BRISTOL MYERS SQUIBB_PR-3242998","Milestone",3863.65],
-["KB Bhoomika","PPG/0021_PR-3143806","Milestone",2550.76],
-["KB Bhoomika","PPG/0021_PR-3143806","ProDeploy ADT: 8 Hours Onsite Server",2534.11],
-["KB Bhoomika","PPG/0021_PR-3145362","Milestone",2550.76],
-["KB Bhoomika","PPG/0021_PR-3145362","ProDeploy ADT: 8 Hours Onsite Server",2534.11],
-["KB Bhoomika","PRESIDIO NETWORKED_MASS BAY TRANSPORTATION_PR-3080822","Other",25872.25],
-["KB Bhoomika","WWT_CONSTELLATION_PR-3174068","Milestone",672.27],
-["Korukonda Srikalyan C.","BLOOMBERG L P_PR-3217400","Milestone",19274.40],
-["Korukonda Srikalyan C.","BLOOMBERG L P_PR-3224214","Milestone",134001.00],
-["Korukonda Srikalyan C.","PR-2892960 Bloomberg DD9910/PMAX/Switch","Milestone - Dayton NJ",33500.25],
-["Korukonda Srikalyan C.","PR-2892960 Bloomberg DD9910/PMAX/Switch","Milestone - Orangeburg 1",33500.25],
-["Korukonda Srikalyan C.","PR-2892960 Bloomberg DD9910/PMAX/Switch","Milestone - Orangeburg 2",33500.25],
-["Korukonda Srikalyan C.","PR-2892960 Bloomberg DD9910/PMAX/Switch","Milestone - Orangeburg 3",33500.25],
-["Korukonda Srikalyan C.","UPS OASIS SUPPLY_PR-3062218 NAS Migration","Migration MS2 - NJ",208505.61],
-["Korukonda Srikalyan C.","UPS OASIS SUPPLY_PR-3062218 NAS Migration","Migration MS3 - GA",195178.40],
-["Korukonda Srikalyan C.","UPS OASIS SUPPLY_PR-3062218 NAS Migration","Migration MS4 - KY",534610.00],
-["Korukonda Srikalyan C.","UPS OASIS SUPPLY_PR-3062218 NAS Migration","Migration MS5 - AK",17575.82],
-["Korukonda Srikalyan C.","UPS OASIS SUPPLY_PR-3062218 NAS Migration","Data Sanitization/Decommission",64328.00],
-["Kumar Sunil","CDW_ROBERT BOSCH_PR-3070680_ECS Expansion_Chicago","Milestone",6111.53],
-["Kumar Sunil","CDW_ROBERT BOSCH_PR-3070682_ECS Expansion_Elk Grove","Milestone",6111.53],
-["Kumar Sunil","FUTURE TECH_JOHNS HOPKINS SCHOOL OF MED_PR-3238354","Milestone",2060.60],
-["Kumar Sunil","SHI INTL CORP_FLEXTRADE SYSTEMS_PR-3012050","Milestone",18411.64],
-["Kumar Sunil","SHI INTL CORP_FLEXTRADE SYSTEMS_PR-3012050","ProDeploy ADT: 8 Hours Onsite DP",2417.03],
-["Kumar Sunil","WWT_PFIZER INC_PR-3114212","Milestone",2016.81],
-["Kumar Tarun","Residency | CHECKFREE SERVICES CORP_PR-2868790 M10","Residency",86341.42],
-["Kumar Tarun","Residency | CHECKFREE SERVICES CORP_PR-2868790 M11","Residency",86341.42],
-["Kumar Tarun","Residency | CHECKFREE SERVICES CORP_PR-2868790 M12","Residency",86341.42],
-["Kumar Tarun","Residency | VICOM_MSKCC_PR-2396218","Residency",96890.90],
-["Kumar Tarun","VICOM_MEMORIAL SLOAN-KETTERING_PR-3148926","Residency",516845.40],
-["L Yuvaraj","Residency_FEDERAL EXPRESS CORP_PR-3057908 MS2","Residency",93846.00],
-["L Yuvaraj","Residency_FEDERAL EXPRESS CORP_PR-3057908 MS3","Residency",93846.00],
-["L Yuvaraj","Residency_FEDERAL EXPRESS CORP_PR-3057908 MS4","Residency",93846.00],
-["L Yuvaraj","Residency_HCA HEALTHCARE_PR-3195256","Residency",114167.40],
-["Lally Mimi","WORLDPAY POWERMAX UPG PR-3198616","Milestone",21342.50],
-["Lerner Hadar","SRD_Peak_REDESIGN_WEBSTAURANTSTORE_PR-3179802","Milestone",10530.53],
-["Lerner Hadar","SRD_PGTek_MYITPROS_MASSACHUSETTS MARITIME ACADEMY_PR-3054614","Milestone",25611.88],
-["Lerner Hadar","SRD_PGTek_REDESIGN_WEBSTAURANTSTORE_PR-3179764","Milestone",10530.53],
-["Malcolm Anthony","RB HEALTH MANUFACTURING US LLC_PR-3011732","Milestone",35942.69],
-["Malcolm Anthony","SRD_PGTek_Peak_PRESIDIO_WEST PHARMACEUTICAL_PR-3016294","Milestone",53357.04],
-["Malcolm Anthony","SRD_PGTek_PRESIDIO_WEST PHARMACEUTICAL_PR-3016302","Milestone",9572.02],
-["Mascarin Angelika Yvonne","SRD_PGTek_PC CONNECTION_MERLIN LABS_PR-2923414","Milestone",3709.08],
-["Meissner Carter","FEDEX FREIGHT, INC_PR-3166028","Milestone",36720.00],
-["Meissner Carter","FISERV_PR-2618718 (RI)","Rack Integration",539377.14],
-["Meissner Carter","MAINLINE RTP_CHECKFREE SERVICES CORP_PR-2977176","Milestone",365400.00],
-["Miller Anita L","CDW LOGISTICS_DHS-OIM BCSE PACSES_PR-3103386","Milestone",6981.00],
-["Miller Anita L","Comcast Business DD-PPDM PR-3182920","Milestone",19730.78],
-["Miller Anita L","COMCAST CABLE COMMUNICATIONS_PR-3206576","Milestone",7350.40],
-["Miller Anita L","COMCAST NE PR-3186578 Cybervault DD/PPDM","Milestone",19587.64],
-["Miller Anita L","HIGHMARK INC_PR-2844866 AHN Vault SAN","Milestone",13548.00],
-["Miller Anita L","SEI GLOBAL SERVICES INC_PR-3131834 Cybersecurity DR","Milestone",52401.44],
-["Miller Anita L","SRD_PGTek_HIGHMARK INC_PR-3010486 VSAN R760","Milestone",26901.66],
-["Miller Anita L","UNISYS_PR-3054566 ADT Refresh SRDF/PMAX","ProDeploy ADT: 4 Hours Remote Storage",936.37],
-["Miller Anita L","UNISYS_PR-3054566 ADT Refresh SRDF/PMAX","ProDeploy ADT: 8 Hours Onsite Storage",4217.84],
-["Mitil Abel Armando","CITIZENS/HANOVER INSURANCE_PR-3191538","Milestone",36075.52],
-["Mitil Abel Armando","EPLUS TECHNOLOGY_ALLEGRO MICROSYSTEMS_PR-3173948","Milestone",10150.72],
-["Mitil Abel Armando","EPLUS TECHNOLOGY_ALLEGRO MICROSYSTEMS_PR-3173948","ProDeploy ADT: 8 Hours Onsite Storage",4599.40],
-["Mitil Abel Armando","MA_SRD_Teksystems_PC CONNECTION_IDEMIA_PR-2976370","Milestone",7418.16],
-["Mitil Abel Armando","SRD_PGTek_CUSTOM COMPUTER_PROVIDENCE WATER_PR-3000244","Milestone",11127.24],
-["Mohammed Afsar Nilufur","Residency | NSCALE_PR-3063696","Residency",612753.00],
-["Mohammed Afsar Nilufur","Residency | WWT_CORE42_PR-3246396","Residency",1600000.48],
-["Mohammed Afsar Nilufur","Residency | BLOOMBERG_PR-2761634","Residency",45212.80],
-["Mohammed Afsar Nilufur","Residency | KLR TECHNOLOGY_ADP_PR-2857832","Residency",2794620.57],
-["Mohammed Afsar Nilufur","Residency | INTERSYSTEMS_PR-3005410","Residency",121246.80],
-["Mohammed Afsar Nilufur","Residency | INTL INTEGRATED SOLUT_BLOOMBERG_PR-3099690","Residency",3158.72],
-["Mohammed Afsar Nilufur","Residency | INTL INTEGRATED SOLUT_BLOOMBERG_PR-3099692","Residency",56856.96],
-["Mohammed Afsar Nilufur","Residency-RF | ARROW_BLOOMBERG_PR-2215906","Residency",115181.86],
-["Mohammed Afsar Nilufur","Residency-RF | INTL INTEGRATED SOLUT_BLOOMBERG_PR-2865718","Residency",11563.06],
-["Mohammed Afsar Nilufur","Residency-RF | INTL INTEGRATED SOLUT_BLOOMBERG_PR-3105608","Residency",41441.28],
-["Mohammed Afsar Nilufur","Residency-RF | KLR TECHNOLOGY_ADP_PR-2859166","Residency",214064.00],
-["Mohammed Afsar Nilufur","Residency-RF | INTL INTEGRATED SOLUT_BLOOMBERG_PR-2794846","Residency",70147.19],
-["Mohammed Afsar Nilufur","Residency-RF | INTL INTEGRATED SOLUT_BLOOMBERG_PR-3105606","Residency",14008.32],
-["Mohammed Afsar Nilufur","Residency | WWT/COMCAST_PR-2961074","Residency",449280.00],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M11","Migration",203694.54],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M5-DC1","Migration",57251.37],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M5-DC2","Migration",22900.56],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M6-ITSM","Migration",30054.99],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M7-Sprint5-7","Migration",72428.03],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M7-DC1","Migration",17175.41],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M8-DC2","Migration",17175.41],
-["Morgan Lester M","WALGREEN NATIONAL_PR-2894046 M8-VM Mig 20%","Migration",203694.54],
-["Moss Sarah","CAMBRIDGE COMPUTER_CARNEGIE MELLON UNIV_PR-3188262","Milestone",28200.32],
-["Moss Sarah","CITY OF PHILADELPHIA_PR-3132270 PPDM","ProDeploy ADT: 8 Hours Onsite DP",22559.00],
-["Moss Sarah","ECHOSTOR_AEGIS_CIGNA CORP_PR-3234730","Milestone",98298.49],
-["Moss Sarah","GLAXOSMITHKLINE_PR-3235906 (Montana)","Milestone",13949.34],
-["Moss Sarah","GLOBALAI_PR-3060298 ECS","Milestone",18544.88],
-["Moss Sarah","GLOBALAI_PR-3060298 ECS","ProDeploy ADT: 8 Hours Onsite Storage",6335.26],
-["Muniz Raul","Redemption_LEVEL SOLUTION GROUP_LFG_PR-3049248","Redemption",28119.00],
-["Ohagan Hagan","PHASE_2_D E SHAW & CO_PR-2963506","Other",15918.80],
-["P Madan","CAMBRIDGE COMPUTER_CITY OF ROANOKE_PR-3041576","Milestone",6871.90],
-["P Madan","CAMBRIDGE COMPUTER_CITY OF ROANOKE_PR-3041578","Milestone",8379.05],
-["P Madan","SOCIAL & SCIENTIFIC SYSTEMS_PR-3101764","Milestone",3293.36],
-["Pandey Apurva","MYLAN INC_PR-2828112","Milestone",28738.50],
-["Petrick Robert","IP DATASYSTEMS_HOWARD HUGHES MED INST_PR-3139844","Milestone",21150.24],
-["Petrick Robert","MORGAN STANLEY_PR-3245384","Milestone",10736.60],
-["Petrick Robert","SRD_PGTek_HANOVER COUNTY_PR-3219082","Milestone",11099.98],
-["Petrick Robert","WWT_CORE42 HOLDING US LLC_PR-3164282","ProDeploy ADT: 8 Hours Onsite Server",324050.00],
-["Purl Laura","PR-2705854_Rockstar IDM ADT SKUs","Milestone",9187.77],
-["R Rahul","FIS_PR-3142156_Connectrix_VOORS","Milestone",12046.00],
-["R Rahul","FIS_PR-3033234_Connectrix_Secaucus","Milestone",12046.00],
-["R Rahul","FIS_PR-3217806 PowerEdge VOOR and PHX","Milestone",3226.90],
-["R Rahul","FIS_PR-3217806 PowerEdge VOOR and PHX","Milestone",3226.90],
-["R Rahul","SRD_FIS_PR-3246656_NJ & VOOR","Milestone",89017.92],
-["R Rahul","SRD_PGTek_FIS_PR-3210704 PowerEdge vSAN","Milestone",9680.70],
-["R Rahul","SRD_PGTek_FLAGLER_FIS_PR-3177144_PowerEdge","Milestone",90353.20],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-2287078 Pre-Paid Hours","Milestone",75060.00],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-2554060 SAN Migration","Migration/Other",84224.04],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-2909420 Brocade Feb 2026","Milestone - CLT",6511.36],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-2909420 Brocade Feb 2026","Milestone - CLT #2",7873.50],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-2909424 Pmax 8500","Milestone - USVA02",27158.39],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-2909424 Pmax 8500","Milestone - USVA01",27158.39],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-3005720 Libris-Austin Switch","Milestone",15912.56],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-3005722 Libris-Smyrna Switch","Milestone",13548.00],
-["Radhakrishnan Sajive","BANK OF AMERICA_PR-3018302 Disk Debrief","Milestone",116536.63],
-["Raman Murali","UPS OASIS SUPPLY_PR-3044968 MS4","Migration",66566.31],
-["Raman Murali","UPS OASIS SUPPLY_PR-3044968 MS5","Migration",44377.65],
-["Raman Murali","UPS OASIS SUPPLY_PR-3044968 MS6","Migration",44377.65],
-["Ramesh Vinay","BRISTOL MYERS SQUIBB - DD 9410 LVL - PR-3158714","Milestone",10132.50],
-["Ramesh Vinay","BRISTOL MYERS SQUIBB - PowerStore Bothell - PR-3197028","Milestone",4786.01],
-["Ramesh Vinay","CHARTER COMMUNICATIONS - C3 PowerFlex/OBS - PR-2942904","Milestone",144417.81],
-["Ramesh Vinay","CHARTER COMMUNICATIONS - C3 PowerFlex/OBS - PR-2942904","ProDeploy ADT: 8 Hours Onsite Storage",12670.52],
-["Ramesh Vinay","CHARTER COMMUNICATIONS - C3 PowerFlex/OBS - PR-2942904","ProDeploy ADT: 8 Hours Onsite PM",20652.96],
-["Ramesh Vinay","CHARTER COMMUNICATIONS - OBS XF960 - PR-2844814","Milestone",23181.00],
-["Ramesh Vinay","EASTERN COMPUTER_BRISTOL MYERS SQUIBB_PR-3250318","Milestone",6181.84],
-["Ramesh Vinay","FUJIFILM DIOSYNTH BIOTECH_PR-3247010","Milestone",12065.20],
-["Ramesh Vinay","OPEN TEXT INC - MDS Directors Upgrade - PR-3058094","Milestone",154673.88],
-["Ramesh Vinay","OPEN TEXT INC - MDS Directors Upgrade - PR-3058094","ProDeploy ADT: 8 Hours Onsite Networking",15204.66],
-["Ramesh Vinay","SRD_PGTek_CHARTER COMMUNICATIONS - PowerScale - PR-3048938","ProDeploy ADT: 4 Hours Remote Storage",2660.82],
-["Ramesh Vinay","SRD_PGTek_CHARTER COMMUNICATIONS - PowerScale - PR-3048938","ProDeploy ADT: 8 Hours Onsite Storage",7665.68],
-["Ramesh Vinay","SRD_PGTek_CHARTER COMMUNICATIONS - PowerScale - PR-3048938","ProDeploy ADT: 8 Hours Onsite PM",2065.29],
-["Ramesh Vinay","SRD_PGTek_EVT_THERMO FISHER_PR-3236846","Milestone",3709.08],
-["Ramesh Vinay","SRD_PGTek_THERMO FISHER - PE R6725 Ashburn - PR-3194464","Milestone",3709.08],
-["Ramesh Vinay","SRD_PGTek_THERMO FISHER - PowerEdge R6725 - PR-3031460","Milestone",44508.96],
-["Ramesh Vinay","SRD_PGTek_THERMO FISHER_PR-3242286","Milestone",11127.24],
-["Ramesh Vinay","SRD_PGTek_THERMO FISHER_PR-3242292","Milestone",6453.80],
-["Ramesh Vinay","SRD_TekSystems_THERMO FISHER_PR-3242262","Milestone",7418.16],
-["Ramesh Vinay","SRD_TekSystems_THERMO FISHER_PR-3242298","Milestone",3709.08],
-["Ramesh Vinay","THERMO FISHER - PowerEdge R4715 Ohio - PR-3160350","Milestone",2689.08],
-["Ramesh Vinay","THERMO FISHER_PR-3194904","Milestone",3361.35],
-["Ravi Prajwal","MAUREEN DATA SYSTEMS_SERVCO PSEG LI_PR-3242004","Data Sanitization",5000.25],
-["Ravi Prajwal","SRD_PGTek_WWT_MERCK_PR-3099452 Powerscale/DD","Milestone",9518.25],
-["Ravi Prajwal","SRD_PGTek_WWT_MERCK_PR-3099452 Powerscale/DD","Milestone",23300.97],
-["Ravi Prajwal","WORLD WIDE TECHNOLOGY_HSBC BANK USA_PR-3186964","Milestone",2689.08],
-["Ravi Prajwal","WORLD WIDE TECHNOLOGY_MERCK & CO_PR-3171178","Milestone",5378.16],
-["Rodriguez Juan Diego","ARROW_PENN MEDICINE_PR-3101950","Milestone",6981.00],
-["Rodriguez Juan Diego","CDW LOGISTICS_ASHLAND_PR-3136834","Milestone",28738.50],
-["Rodriguez Juan Diego","SRD_PGTek_STATE OF DELEWARE/DTI_PR-3044930","Milestone",6195.64],
-["Rodriguez Juan Diego","SRD_TekSystems_BLUE YONDER_PR-3007764","Milestone",44508.96],
-["Rowland Mark","E-PLUS TECHNOLOGY/AOL_VERIZON SERVICES_PR-3055966","Milestone",5378.16],
-["Sandoya Erick","GEN DIGITAL INC_PR-2995178","Milestone",33950.25],
-["Sandoya Erick","SRD_PGTek_MELILLO_DELAWARE ST POLICE_PR-3153026","Milestone",24105.04],
-["Sandoya Erick","SRD_PGTek_RE DESIGN_UNIV OF VA HEALTH_PR-3062512","Milestone",13552.98],
-["Santone Anthony","BLUE MANTIS_KRAFT GROUP_PR-3031144","ProDeploy ADT: 8 Hours Onsite Storage",4686.50],
-["Santone Anthony","HCA HEALTHCARE_PR-3195262","Milestone",7073.01],
-["Santone Anthony","HCA HEALTHCARE_PR-3197044","Milestone",6925.22],
-["Santone Anthony","HCA HEALTHCARE_PR-3198356","Milestone",6925.22],
-["Santone Anthony","KYNDRYL_BROADRIDGE FINANCIAL_PR-3041764","Milestone",2460.60],
-["Santone Anthony","RE DESIGN_WEBSTAURANTSTORE_PR-3218388","Milestone",17455.75],
-["Santone Anthony","SIMPSON THACHER & BARTLETT_PR-2417548","Milestone",108000.00],
-["Santone Anthony","SRD_PGTek_REDESIGN_WEBSTAURANTSTORE_PR-3250650","Milestone",23611.84],
-["Sarangi Gaurab","STONEBRIAR CML FINANCING LLC_PR-2923068","Milestone",8247.20],
-["Sawka William","GLOBALAI 1 1 LLC_PR-3154528 MS2","Rack Integration",44300.00],
-["Sawka William","GLOBALAI 1 1 LLC_PR-3154528 MS3","Rack Integration",180000.00],
-["Sawka William","GLOBALAI 1 1 LLC_PR-3154530 MS1","Rack Integration",49500.00],
-["Sawka William","HUDSON RIVER TRADING LLC_PR-2922784","Milestone",290400.80],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS2 Rack Integration","Rack Integration",1445645.48],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS3 Infra Readiness","Rack Integration",23244.20],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS4 Rack Install/Power","Rack Integration",597575.99],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS5 Liquid Cooling","Rack Integration",97024.58],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS6 Inter-rack Cabling","Rack Integration",3185563.27],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS7 Inter-rack Cabling","Rack Integration",3185563.27],
-["Sawka William","JANE STREET GROUP_PR-3179650 MS8 Project Closure","Rack Integration",161109.60],
-["Sawka William","JANE STREET GROUP_PR-3219622","Milestone",3759.75],
-["Sawka William","JANE STREET GROUP_PR-3219626","Milestone",651.00],
-["Sawka William","JANE STREET GROUP_PR-3225452","Milestone",51800.00],
-["Sawka William","RENAISSANCE TECHNOLOGIES_PR-3134866","Milestone",126300.00],
-["Schell Andrew M","NATWEST MARKETS SECURITIES INC_PR-3164194","Milestone",2534.96],
-["Schell Andrew M","PRESIDIO NETWORKED_PR-3130178","Milestone",7506.60],
-["Scott Kit","GEV INTL LLC_Atlanta ProDeploy PowerProtect_PR-3238294","Milestone",2829.75],
-["Seenappa Srinath N","ECHOSTOR_AKAMAI TECHNOLOGIES_PR-3079056","Milestone",14700.80],
-["Seenappa Srinath N","PRESIDIO_RHODE ISLAND RECOVERY_DPC_DAP_PR-3244622","Milestone",6954.48],
-["Seenappa Srinath N","SRD_PGTek_PRESIDIO_RHODE ISLAND RECOVERY_PR-3244630","Milestone",22922.10],
-["Sharma Richa","PARTNERS HEALTHCARE_PR-3141206","Milestone",25093.13],
-["Sharma Richa","TD SYNNEX CORP_CLOUDWAVE_PR-3151684","Other",1073.16],
-["Sinha Sharad","AHEAD INC_TRADEWEB JAPAN_PR-3077866","Milestone",5209.30],
-["Sinha Sharad","AIR PRODUCTS_PR-3205030","Milestone",672.27],
-["Sinha Sharad","ATLAS PS_GE_PR-3204720","Milestone",672.27],
-["Sinha Sharad","CHARLES IT_MERIT 2 0_PR-3185112","Milestone",1173.92],
-["Sinha Sharad","FREESTATE ELECTRIC_PR-3246490","Milestone",3016.30],
-["Sinha Sharad","HCL AMERICA_VOLVO CARS_PR-3224452","Milestone",1700.52],
-["Sinha Sharad","SOFTCHOICE_AEW_PR-3214226","Milestone",4033.62],
-["Smith Walter","FANNIE MAE_DD Erasure (CH3)_PR-3244932","Data Sanitization",6000.00],
-["Smith Walter","HIGHMARK INC - 3 Node Cluster Rebuild - PR-3116156","ProDeploy ADT: 8 Hours Onsite HCI",11939.13],
-["Smith Walter","HIGHMARK INC - 3 Node Cluster Rebuild - PR-3116156","ProDeploy ADT: 8 Hours Onsite PM",3230.52],
-["Solano Marco","DATAPIVOT_CLEAN HARBORS_PR-3212188 PowerScale","Milestone",7659.68],
-["Solano Marco","DATAPIVOT_CLEAN HARBORS_PR-3212188 PowerScale","ProDeploy ADT: 4 Hours Remote Storage",2660.82],
-["Somanath Darshan","DALY COMPUTERS_MD ENVIRONMENTAL SVC_PR-3205056","Milestone",9377.62],
-["Somanath Darshan","WORLDCOM EXCHANGE_TUFTS MEDICINE_PR-3255914","Milestone",8043.46],
-["Sridhar Srikanth","REDEMPTION_ARROW_LINCOLN FINANCIAL GROUP_PR-3175212 MS1","Redemption",45779.84],
-["Sridhar Srikanth","REDEMPTION_ARROW_LINCOLN FINANCIAL GROUP_PR-3175212 MS2","Redemption",45779.85],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 CloudLink","Milestone",7594.40],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 1","Milestone",15641.96],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 2","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 3","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 4","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 5","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 6","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 7","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 8","Milestone",39104.90],
-["Stern Dana","REDAPT_UKG PowerFlex Appliance_PR-2342222 Order 9","Milestone",23462.94],
-["Stern Dana","ULTIMATE KRONOS GROUP_PR-2372298_POWERFLEX BASE","Milestone",37366.68],
-["Stern Dana","ULTIMATE KRONOS GROUP_PR-2372300_POWERFLEX ADD ON","Milestone",53647.30],
-["Stewart Jerry","CATERPILLAR - OEM_PR-3034554","Milestone",4964.36],
-["Stewart Jerry","MATHWORKS_SRD_PGTek_SHI_PR-3083174","Milestone",68512.60],
-["Stewart Jerry","PENSKE_PR-3235384","ProDeploy ADT: 8 Hours Onsite Networking",5406.10],
-["Stewart Jerry","SRD_PGTek_STATE STREET BANK_PR-2839176","Milestone",9904.24],
-["Stewart Jerry","STATE STREET BANK_PR-2963292","Milestone",17769.20],
-["Stewart Jerry","STATE STREET BANK_PR-3246190","Other",52689.96],
-["Storonskyj Edward D","MORGAN STANLEY SERVICES_PR-3245386","Milestone",21473.20],
-["Storonskyj Edward D","AHEAD_QUANTINUUM LLC_PR-3158316","Milestone",14700.80],
-["Storonskyj Edward D","DESIGN GROUP_UMASS PRESIDENT'S OFFICE_PR-3172202 Vplex","Milestone",7263.00],
-["Storonskyj Edward D","DESIGN GROUP_UNIV OF MASSACHUSETTS_PR-3171282 VPlex","Milestone",7263.00],
-["Storonskyj Edward D","FRAMATOME_PR-3165800","Milestone",7350.40],
-["Storonskyj Edward D","IP DATASYSTEMS_HHMI_PR-3152202","Milestone",36316.00],
-["Storonskyj Edward D","JETCOOL TECHNOLOGIES_OEM_PR-2962018","Milestone",7350.40],
-["Storonskyj Edward D","NVIDIA C/O OMNI LOGISTICS_PR-3238284","Milestone",7350.40],
-["Storonskyj Edward D","PNC BANK_AIFactory_PR-3111300 MS4","Milestone",45178.20],
-["Storonskyj Edward D","PRESIDIO_WELLINGTON MANAGEMENT_PR-3193452","Milestone",14700.80],
-["Storonskyj Edward D","RE DESIGN_UNIV OF MASS CLUB_PR-3191710","Milestone",2623.95],
-["Sugar Paola Esther","ATHENA HEALTH_PR-3043770","Other",2065.30],
-["Sugar Paola Esther","BROWN UNIV HEALTH_PR-3200214","Data Sanitization",2826.56],
-["Sugar Paola Esther","BROWN UNIV HEALTH_PR-3200214","Milestone",3829.84],
-["Sugar Paola Esther","CDW LOGISTICS_FRESENIUS KABI USA_PR-2861816","Milestone",10439.01],
-["Sugar Paola Esther","PRESIDIO_BOSTON SCIENTIFIC CORP_PR-3073454","Other",15400.50],
-["Sugar Paola Esther","PRESIDIO_BOSTON SCIENTIFIC_PR-3245826","Milestone",11996.94],
-["Udupa Shrinivasa","Residency | WWT_CITI US OPERATING ORG_PR-3197080","Residency",600000.00],
-["Udupa Shrinivasa","Residency | UPS_PR-2104062","Residency",3523373.30],
-["Udupa Shrinivasa","Residency | JPMORGAN CHASE BANK_PR-3063968","Residency",995140.64],
-["V Priyadharshini","CVS HEALTH | Memory Upgrade | PR-3236056","Milestone",3826.14],
-["V Priyadharshini","CVS HEALTH | Memory Upgrade | PR-3244946","Milestone",1275.38],
-["V Priyadharshini","CVS PHARMACY | PSU Replacement | PR-3236102","Milestone",5101.60],
-["V Priyadharshini","PRESIDIO_CVS PHARMACY | PowerFlex Atlanta | PR-3163226","Milestone",102745.50],
-["V Priyadharshini","PRESIDIO_CVS PHARMACY | PowerFlex Las Vegas | PR-3163230","Milestone",39023.52],
-["V Priyadharshini","SRD_PGTek_CVS PHARMACY | PowerEdge Las Vegas | PR-3162056","Milestone",16134.50],
-["V Priyadharshini","SRD_PGTek_PRESIDIO_CVS PHARMACY | PowerEdge Atlanta | PR-3158704","Milestone",171025.70],
-["Valdivia Fernanda","STORAGE NETWORKS_TOWN OF LEXINGTON_PR-2892966","Milestone",23577.25],
-["Valencia Graciela","FEDERAL EXPRESS CORP_PR-3110152_FXG FMM 60 LCM Sites","ProDeploy ADT: 8 Hours Onsite PM",180000.39],
-["Vikraman Vinil","WWT/KENVUE INC_PR-2587058 VCE-RCM M1","Milestone",5782.57],
-["Vikraman Vinil","WWT/KENVUE INC_PR-2587058 VCE-RCM M2","Milestone",5782.57],
-["Vikraman Vinil","WWT/KENVUE INC_PR-2587058 VCE-RCM M3","Milestone",5782.57],
-["Vikraman Vinil","WWT/KENVUE INC_PR-2587058 VCE-RCM M4","Milestone",5782.57],
-["Vikraman Vinil","WWT/KENVUE INC_PR-2587058 VCE-RCM M5","Milestone",5782.57],
-["Vikraman Vinil","WWT/KENVUE INC_PR-2587058 VCE-RCM M6","Milestone",5782.57],
-["Welty Michael T","REDESIGN_BANK OF CHINA_PR-3182000","Milestone",21150.24],
-["Wessells Jerry","Penske Switch Deployment_PR-3145732","Milestone",2645.88],
-["Wessells Jerry","T Rowe Price Bucket of Hours_PR-2041868","Other",35172.60],
-["Willis Tanika","FIS_PR-3158008_PowerEdge_Ally_LRTC","Milestone",35495.90],
-["Willis Tanika","FIS_PR-3158012_PowerEdge_AMEX_LRTC","Milestone",16134.50],
-["Willis Tanika","FIS_PR-3168068_SyndTrack/JPM BDOC_SyndTrack","Milestone",12907.60],
-["Willis Tanika","FIS_PR-3168068_SyndTrack/JPM PHX_SyndTrack","Milestone",12907.60],
-["Willis Tanika","FIS_PR-3168068_SyndTrack/JPM BDOC_JPM","Milestone",6453.80],
-["Willis Tanika","FIS_PR-3249540_OMNI PLUS","Milestone",22254.48],
-["Willis Tanika","NSCALE NC - Compute/Networking Racks Phase 1 - PR-2967586 MS5","Rack Integration",2164600.00],
-["Willis Tanika","NSCALE NC - Compute/Networking Racks Phase 1 - PR-2967586 MS7","Rack Integration",8085800.00],
-["Willis Tanika","NSCALE NC - Compute/Networking Racks Phase 1 - PR-2967586 MS8","Rack Integration",7196.00],
-["Willis Tanika","NSCALE NC BORROWER SPV_PR-3186658 PCR M10","Milestone",43498.15],
-["Willis Tanika","NSCALE OPERATIONS US LLC_PR-3250098","Milestone",42182.77],
-["Willis Tanika","NSCALE OPERATIONS US LLC_PR-3253096 Inter-Rack Complete","Rack Integration",372062.47],
-["Willis Tanika","NSCALE OPERATIONS US LLC_PR-3253096 Inter-Rack Prep","Rack Integration",372062.47],
-["Willis Tanika","NSCALE OPERATIONS US LLC_PR-3253096 Project Handover","Rack Integration",232055.58],
-["Willis Tanika","NSCALE OPERATIONS US LLC_PR-3253096 Rack Install/Power","Rack Integration",185045.15],
-["Willis Tanika","NSCALE_PR-3189376","Milestone",68498.15],
-["Woodley Charles W","AHEAD_FEDERAL HOME LOAN BANK_PR-3130154 Migration","Migration",15150.00],
-["Woodley Charles W","AHEAD_FEDERAL HOME LOAN BANK_PR-3083616","Data Sanitization",3415.43],
-["Woodley Charles W","AHEAD_FEDERAL HOME LOAN BANK_PR-3083634","Data Sanitization",3415.43],
-["Woodley Charles W","FREDDIE MAC_PR-3233550 Avamar to PPDM","Milestone",142160.74],
-["Woodley Charles W","FREDDIE MAC_PR-3233550 Avamar to PPDM","ProDeploy ADT: 4 Hours Remote DP",23752.60],
-["Woodley Charles W","INSIGHT_JPMORGAN CHASE BANK_PR-3180642 XE9780","Milestone",15261.16],
-["Woodley Charles W","NATIONAL GRID_PR-2899750 VxRail/PowerStore/Switches","Milestone",75842.48],
-["Woodley Charles W","NGUSA SERVICE CO_PR-3134868 Isilon & Migration","Migration",389000.00],
-["Woodley Charles W","SCHNEIDER ELECTRIC_PR-3217944 XE7745","Milestone",7350.40],
-["Woodley Charles W","SOFTCHOICE_TRINITY CYBER_PR-3204620 XE7740","Milestone",14700.80],
-["Woodley Charles W","WWT/NBCU_NBC UNIVERSAL INC_PR-3225558 XE7745","Milestone",7350.40]
-];
-
-const TOTAL = 58649611.10;
-
-// ── Helpers ──
-const fmt = n => '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtK = n => n>=1e6?'$'+(n/1e6).toFixed(2)+'M':n>=1e3?'$'+(n/1e3).toFixed(1)+'K':fmt(n);
-
-function classify(svc){
-  const s = svc.toLowerCase();
-  if(s.includes('residency')) return 'Residency';
-  if(s.includes('rack integration')) return 'Rack Integration';
-  if(s.includes('redemption')) return 'Redemption';
-  if(s.includes('migration')) return 'Migration';
-  if(s.includes('data sanit')||s.includes('erasure')||s.includes('erasur')) return 'Data Sanitization';
-  if(s.includes('prodeploy')||s.includes('adt')) return 'ProDeploy ADT';
-  if(s.includes('milestone')) return 'Milestone';
-  return 'Other';
-}
-
-function tierOf(val){
-  if(val>=5e6) return {name:'Mega',cls:'b-red'};
-  if(val>=1e6) return {name:'Large',cls:'b-orange'};
-  if(val>=250e3) return {name:'Medium',cls:'b-yellow'};
-  if(val>=50e3) return {name:'Small',cls:'b-green'};
-  return {name:'Micro',cls:'b-blue'};
-}
-
-// ── Aggregate PM data ──
-const pmMap = {};
-rawData.forEach(r=>{
-  if(!pmMap[r[0]]) pmMap[r[0]]={total:0,items:[],projects:new Set()};
-  pmMap[r[0]].total+=r[3];
-  pmMap[r[0]].items.push({proj:r[1],svc:r[2],amt:r[3],cat:classify(r[2])});
-  pmMap[r[0]].projects.add(r[1]);
-});
-const pmList = Object.entries(pmMap).map(([name,d])=>({name,total:d.total,items:d.items,projCount:d.projects.size})).sort((a,b)=>b.total-a.total);
-
-// ── Customer extraction ──
-function extractCustomer(proj){
-  const p = proj.replace(/^(SRD_|PGTek_|Peak_|TekSystems_|Residency[^|]*\|?\s*)/gi,'').replace(/^(RF[_:]?\s*)/i,'');
-  const cust_patterns = [
-    /BANK OF AMERICA/i, /GOLDMAN SACHS/i, /HSBC/i, /BLOOMBERG/i, /JPMORGAN|JP MORGAN/i,
-    /MORGAN STANLEY/i, /NSCALE/i, /JANE STREET/i, /FIS[_,]/i, /FISERV|CHECKFREE/i,
-    /CIGNA/i, /CVS/i, /UPS /i, /TRAVELERS/i, /HCA HEALTHCARE/i, /MSKCC|MEMORIAL SLOAN|MSK /i,
-    /MGB|MASS GENERAL|PARTNERS HEALTH/i, /PFIZER/i, /MERCK/i, /THERMO FISHER/i,
-    /CHARTER COMM/i, /BRISTOL MYERS/i, /STATE STREET/i, /FEDEX|FEDERAL EXPRESS/i,
-    /COMCAST/i, /SUMITOMO MITSUI/i, /TOWER RESEARCH/i, /HUDSON RIVER|HRT /i,
-    /FLUIDSTACK/i, /CORE42/i, /ADP /i, /CITI /i, /WALGREEN/i, /HARVARD/i, /MIT[-_ ]/i,
-    /JOHNS HOPKINS/i, /INTERSYSTEMS/i, /NATIONAL GRID|NGUSA/i, /FREDDIE MAC/i,
-    /HIGHMARK/i, /BETH ISRAEL|BIHL/i, /FUJIFILM/i, /T ROWE PRICE/i, /GE AEROSPACE|GE VERNOVA/i,
-    /GLOBALAI/i, /FLEXCOMPUTE/i, /RENAISSANCE TECH/i, /PNC BANK/i, /CABLEVISION/i,
-    /LIBERTY MUTUAL/i, /OPEN TEXT/i, /WEST PHARMACEUTICAL/i, /WEBSTAURANTSTORE/i,
-    /SANTANDER/i, /SIMPSONTHACHER|SIMPSON THACHER/i, /CENCORA|AMERISOURCEBERGEN/i,
-    /CARNEGIE MELLON/i, /GLAXOSMITH/i, /OUTSEER/i, /ROBERT BOSCH/i, /PENSKE/i,
-    /ANALOG DEVICES/i, /VOLVO/i, /HAMPTON ROADS/i, /ALLEGRO MICRO/i, /AKAMAI/i,
-    /CATERPILLAR/i, /BLUE YONDER/i, /QUANTINUUM/i, /NVIDIA/i, /BOSE/i,
-    /PPG/i, /BOSTON SCIENTIFIC/i, /SEI GLOBAL/i, /DURHAM|VERISIGN/i,
-    /WORLDPAY/i, /SUSQUEHANNA/i, /VIRTU FINANCIAL/i, /UKG|ULTIMATE KRONOS/i,
-    /SMITH & NEPHEW/i, /SCHNEIDER ELECTRIC/i, /KENVUE/i, /FORTWORTH/i,
-    /BRACEBRIDGE/i, /MASSMUTUAL/i, /FLEXTRADE/i, /D E SHAW/i
-  ];
-  const cust_names = [
-    'Bank of America','Goldman Sachs','HSBC','Bloomberg','JPMorgan Chase',
-    'Morgan Stanley','NSCALE','Jane Street','FIS','Fiserv/Checkfree',
-    'Cigna','CVS Health','UPS','Travelers','HCA Healthcare','MSKCC',
-    'Mass General Brigham','Pfizer','Merck','Thermo Fisher',
-    'Charter Communications','Bristol Myers Squibb','State Street Bank','FedEx',
-    'Comcast','Sumitomo Mitsui','Tower Research','Hudson River Trading',
-    'FluidStack','Core42','ADP','Citi','Walgreens','Harvard University','MIT',
-    'Johns Hopkins','InterSystems','National Grid','Freddie Mac',
-    'Highmark','Beth Israel Lahey','Fujifilm','T. Rowe Price','GE Aerospace/Vernova',
-    'GlobalAI','FlexCompute','Renaissance Technologies','PNC Bank','Cablevision',
-    'Liberty Mutual','Open Text','West Pharmaceutical','WebstaurantStore',
-    'Santander','Simpson Thacher','Cencora','Carnegie Mellon','GlaxoSmithKline',
-    'Outseer','Robert Bosch','Penske','Analog Devices','Volvo','Hampton Roads Transit',
-    'Allegro Microsystems','Akamai','Caterpillar','Blue Yonder','Quantinuum','NVIDIA','Bose',
-    'PPG','Boston Scientific','SEI Global','Verisign',
-    'Worldpay','Susquehanna','Virtu Financial','UKG/Kronos',
-    'Smith & Nephew','Schneider Electric','Kenvue','HCA Fort Worth',
-    'Bracebridge Capital','MassMutual','FlexTrade','D.E. Shaw'
-  ];
-  for(let i=0;i<cust_patterns.length;i++){
-    if(cust_patterns[i].test(proj)) return cust_names[i];
-  }
-  return 'Other / Various';
-}
-
-const custMap = {};
-rawData.forEach(r=>{
-  const c = extractCustomer(r[1]);
-  if(!custMap[c]) custMap[c]={total:0,items:0,pms:new Set()};
-  custMap[c].total+=r[3];
-  custMap[c].items++;
-  custMap[c].pms.add(r[0]);
-});
-const custList = Object.entries(custMap).map(([name,d])=>({name,total:d.total,items:d.items,pmCount:d.pms.size})).sort((a,b)=>b.total-a.total);
-
-// ── Service category aggregate ──
-const svcMap = {};
-rawData.forEach(r=>{
-  const c = classify(r[2]);
-  if(!svcMap[c]) svcMap[c]={total:0,count:0};
-  svcMap[c].total+=r[3];
-  svcMap[c].count++;
-});
-const svcList = Object.entries(svcMap).map(([name,d])=>({name,total:d.total,count:d.count})).sort((a,b)=>b.total-a.total);
-
-// ═══════════════════════════ TAB SWITCHING ═══════════════════════════
-function showTab(id){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// ═══════════════════════════ TAB 1: TOP PM CHART ═══════════════════════════
-function renderTopPmChart(){
-  const top = pmList.slice(0,15);
-  const max = top[0].total;
-  const colors = ['#dc3545','#e67e22','#f0ad4e','#28a745','#00B4E5','#0076CE','#8e44ad','#1abc9c'];
-  let h = '';
-  top.forEach((pm,i)=>{
-    const pct = (pm.total/max*100).toFixed(1);
-    const c = colors[i%colors.length];
-    h+=`<div class="bar-row">
-      <div class="bar-label" title="${pm.name}">${pm.name}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c}"></div></div>
-      <div class="bar-val">${fmtK(pm.total)}</div>
-    </div>`;
-  });
-  document.getElementById('topPmChart').innerHTML = h;
-}
-
-// ═══════════════════════════ TAB 2: PM ACCORDION ═══════════════════════════
-function renderPmAccordion(){
-  const container = document.getElementById('pmAccordion');
-  let h = '';
-  pmList.forEach((pm,i)=>{
-    const rank = i+1;
-    const tier = tierOf(pm.total);
-    const pct = (pm.total/TOTAL*100).toFixed(2);
-    const rCls = rank<=3?'r'+rank:'';
-    // Group items by project
-    const projGrp = {};
-    pm.items.forEach(it=>{
-      if(!projGrp[it.proj]) projGrp[it.proj]=[];
-      projGrp[it.proj].push(it);
-    });
-
-    h+=`<div class="pm-card" data-pm="${pm.name.toLowerCase()}" data-tier="${tier.name.toLowerCase()}" data-total="${pm.total}">
-      <div class="pm-header" onclick="togglePm(this)">
-        <div class="pm-rank ${rCls}">${rank}</div>
-        <div>
-          <div class="pm-name">${pm.name} <span class="badge ${tier.cls}" style="margin-left:6px">${tier.name}</span></div>
-          <div class="pm-proj-count">${pm.projCount} project${pm.projCount>1?'s':''} &bull; ${pm.items.length} line item${pm.items.length>1?'s':''}</div>
-        </div>
-        <div class="pm-total">${fmtK(pm.total)}</div>
-        <div class="pm-pct">${pct}%</div>
-        <div class="pm-chevron">▼</div>
-      </div>
-      <div class="pm-body">
-        <table class="tbl">
-          <thead><tr><th style="width:40%">Project</th><th style="width:30%">Service / Milestone</th><th>Category</th><th class="r">Amount</th><th class="r">% of PM</th></tr></thead>
-          <tbody>`;
-
-    Object.entries(projGrp).forEach(([proj, items])=>{
-      const projTotal = items.reduce((s,it)=>s+it.amt,0);
-      if(items.length === 1){
-        const it = items[0];
-        h+=`<tr>
-          <td title="${it.proj}">${it.proj.length>55?it.proj.slice(0,55)+'…':it.proj}</td>
-          <td>${it.svc}</td>
-          <td><span class="badge ${catBadge(it.cat)}">${it.cat}</span></td>
-          <td class="r bold">${fmt(it.amt)}</td>
-          <td class="r">${(it.amt/pm.total*100).toFixed(1)}%</td>
-        </tr>`;
-      } else {
-        // Project subtotal row
-        h+=`<tr style="background:#eef2ff;font-weight:600;">
-          <td title="${proj}" colspan="3">${proj.length>80?proj.slice(0,80)+'…':proj} (${items.length} items)</td>
-          <td class="r">${fmt(projTotal)}</td>
-          <td class="r">${(projTotal/pm.total*100).toFixed(1)}%</td>
-        </tr>`;
-        items.forEach(it=>{
-          h+=`<tr style="font-size:12px;color:#555;">
-            <td style="padding-left:28px;">↳</td>
-            <td>${it.svc}</td>
-            <td><span class="badge ${catBadge(it.cat)}" style="font-size:10px;">${it.cat}</span></td>
-            <td class="r">${fmt(it.amt)}</td>
-            <td class="r">${(it.amt/pm.total*100).toFixed(1)}%</td>
-          </tr>`;
-        });
-      }
-    });
-
-    h+=`</tbody></table></div></div>`;
-  });
-  container.innerHTML = h;
-}
-
-function catBadge(cat){
-  const m = {Milestone:'b-blue',Residency:'b-purple','ProDeploy ADT':'b-teal','Data Sanitization':'b-orange','Rack Integration':'b-red',Redemption:'b-yellow',Migration:'b-yellow',Other:'b-green'};
-  return m[cat]||'b-blue';
-}
-
-function togglePm(el){
-  el.classList.toggle('open');
-  el.nextElementSibling.classList.toggle('open');
-}
-function expandAll(){
-  document.querySelectorAll('.pm-card').forEach(c=>{
-    if(c.style.display==='none') return;
-    c.querySelector('.pm-header').classList.add('open');
-    c.querySelector('.pm-body').classList.add('open');
-  });
-}
-function collapseAll(){
-  document.querySelectorAll('.pm-header').forEach(h=>h.classList.remove('open'));
-  document.querySelectorAll('.pm-body').forEach(b=>b.classList.remove('open'));
-}
-function filterPMs(){
-  const q = document.getElementById('pmSearch').value.toLowerCase();
-  const tier = document.getElementById('pmTierFilter').value;
-  let count = 0;
-  document.querySelectorAll('.pm-card').forEach(c=>{
-    const name = c.dataset.pm;
-    const t = c.dataset.tier;
-    const show = name.includes(q) && (!tier || t===tier);
-    c.style.display = show?'':'none';
-    if(show) count++;
-  });
-  document.getElementById('pmCount').textContent = `Showing ${count} PMs`;
-}
-
-// ═══════════════════════════ TAB 3: CUSTOMERS ═══════════════════════════
-function renderCustomers(){
-  // Bar chart
-  const top25 = custList.slice(0,25);
-  const max = top25[0].total;
-  let h = '';
-  top25.forEach((c,i)=>{
-    const pct = (c.total/max*100).toFixed(1);
-    const barColor = c.total>=1e6?'#dc3545':c.total>=250e3?'#e67e22':c.total>=50e3?'#0076CE':'#28a745';
-    h+=`<div class="bar-row">
-      <div class="bar-label" title="${c.name}">${c.name}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
-      <div class="bar-val">${fmtK(c.total)}</div>
-    </div>`;
-  });
-  document.getElementById('custChart').innerHTML = h;
-
-  // Full table
-  let t = `<table class="tbl" id="custTable"><thead><tr><th>#</th><th>Customer</th><th class="r">Backlog</th><th class="r">% Total</th><th class="c"># PMs</th><th class="c"># Items</th><th>Share</th></tr></thead><tbody>`;
-  custList.forEach((c,i)=>{
-    const pct = (c.total/TOTAL*100);
-    t+=`<tr data-name="${c.name.toLowerCase()}">
-      <td class="c">${i+1}</td>
-      <td class="bold">${c.name}</td>
-      <td class="r bold">${fmt(c.total)}</td>
-      <td class="r">${pct.toFixed(2)}%</td>
-      <td class="c">${c.pmCount}</td>
-      <td class="c">${c.items}</td>
-      <td><div class="mini-bar"><div class="mini-track"><div class="mini-fill" style="width:${pct}%;background:var(--pri)"></div></div><div class="mini-pct">${pct.toFixed(1)}%</div></div></td>
-    </tr>`;
-  });
-  t+=`</tbody></table>`;
-  document.getElementById('custTableWrap').innerHTML = t;
-  document.getElementById('custCount').textContent = `${custList.length} unique customers identified`;
-}
-function filterCustomers(){
-  const q = document.getElementById('custSearch').value.toLowerCase();
-  document.querySelectorAll('#custTable tbody tr').forEach(r=>{
-    r.style.display = r.dataset.name.includes(q)?'':'none';
-  });
-}
-
-// ═══════════════════════════ TAB 4: SERVICES ═══════════════════════════
-function renderServices(){
-  const colors = {Milestone:'#0076CE',Residency:'#8e44ad','Rack Integration':'#dc3545','ProDeploy ADT':'#1abc9c',Migration:'#f0ad4e',Redemption:'#e67e22','Data Sanitization':'#e74c3c',Other:'#95a5a6'};
-  let tbody = '';
-  svcList.forEach(s=>{
-    const pct = (s.total/TOTAL*100);
-    tbody+=`<tr>
-      <td class="bold"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${colors[s.name]||'#999'};margin-right:8px;vertical-align:middle;"></span>${s.name}</td>
-      <td class="r bold">${fmt(s.total)}</td>
-      <td class="r">${pct.toFixed(1)}%</td>
-      <td class="c">${s.count}</td>
-    </tr>`;
-  });
-  document.getElementById('svcTable').innerHTML = tbody;
-
-  // Stacked bar visual
-  let barH = '<div style="margin-top:20px;"><div style="font-weight:700;margin-bottom:8px;font-size:13px;">Portfolio Composition</div>';
-  barH += '<div style="display:flex;height:40px;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)">';
-  svcList.forEach(s=>{
-    const pct = (s.total/TOTAL*100);
-    if(pct<0.5) return;
-    barH+=`<div style="width:${pct}%;background:${colors[s.name]||'#999'};display:flex;align-items:center;justify-content:center;" title="${s.name}: ${fmtK(s.total)} (${pct.toFixed(1)}%)">
-      <span style="color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;">${pct>5?s.name:''}</span>
-    </div>`;
-  });
-  barH += '</div><div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;">';
-  svcList.forEach(s=>{
-    barH+=`<div style="display:flex;align-items:center;gap:5px;font-size:12px;"><span style="width:12px;height:12px;border-radius:3px;background:${colors[s.name]||'#999'};flex-shrink:0;"></span>${s.name} (${(s.total/TOTAL*100).toFixed(1)}%)</div>`;
-  });
-  barH += '</div></div>';
-  document.getElementById('svcChart').innerHTML = barH;
-
-  // Technology blocks
-  const techs = [
-    {name:'PowerMax / PowerStore',keywords:['powermax','pmax','powerstore'],color:'var(--pri)'},
-    {name:'PowerScale / Isilon',keywords:['powerscale','isilon','a3100','f710','f910'],color:'var(--ok)'},
-    {name:'Data Domain / PPDM',keywords:['data domain','dd9910','dd6410','ppdm','ddve','avamar'],color:'var(--warn)'},
-    {name:'ECS / Object Storage',keywords:['ecs','object'],color:'var(--orange)'},
-    {name:'PowerEdge Servers',keywords:['poweredge','xe9780','xe7740','xe7745','r760','r6725','r4715','b200','b300'],color:'var(--err)'},
-    {name:'PowerFlex / VxRail / HCI',keywords:['powerflex','vxrail','hci','vcf','vsan'],color:'#8e44ad'},
-    {name:'Networking / SAN',keywords:['connectrix','switch','brocade','san','networking'],color:'#1abc9c'},
-    {name:'Rack / Liquid Cooling',keywords:['rack','liquid cool','inter-rack','power-up'],color:'#e74c3c'},
-  ];
-  let techH = '';
-  techs.forEach(t=>{
-    let sum = 0, cnt = 0;
-    rawData.forEach(r=>{
-      const txt = (r[1]+' '+r[2]).toLowerCase();
-      if(t.keywords.some(k=>txt.includes(k))){sum+=r[3];cnt++;}
-    });
-    if(sum>0) techH+=`<div class="stat-block" style="border-top:3px solid ${t.color}"><div class="sv">${fmtK(sum)}</div><div class="sl">${t.name} (${cnt})</div></div>`;
-  });
-  document.getElementById('techBlocks').innerHTML = techH;
-}
-
-// ═══════════════════════════ TAB 5: FULL DETAIL ═══════════════════════════
-let detailSortCol = -1, detailSortDir = 1;
-function renderDetail(){
-  const body = document.getElementById('detailBody');
-  let h = '';
-  rawData.forEach((r,i)=>{
-    const cat = classify(r[2]);
-    h+=`<tr data-pm="${r[0].toLowerCase()}" data-cat="${cat.toLowerCase()}" data-amt="${r[3]}" data-all="${(r[0]+' '+r[1]+' '+r[2]).toLowerCase()}">
-      <td class="c">${i+1}</td>
-      <td class="bold">${r[0]}</td>
-      <td title="${r[1]}">${r[1].length>65?r[1].slice(0,65)+'…':r[1]}</td>
-      <td>${r[2]}</td>
-      <td class="r bold">${fmt(r[3])}</td>
-      <td><span class="badge ${catBadge(cat)}">${cat}</span></td>
-    </tr>`;
-  });
-  body.innerHTML = h;
-
-  // Populate filters
-  const pmSelect = document.getElementById('detailPmFilter');
-  const pmNames = [...new Set(rawData.map(r=>r[0]))].sort();
-  pmNames.forEach(n=>{pmSelect.innerHTML+=`<option value="${n.toLowerCase()}">${n}</option>`;});
-
-  const svcSelect = document.getElementById('detailSvcFilter');
-  const cats = [...new Set(rawData.map(r=>classify(r[2])))].sort();
-  cats.forEach(c=>{svcSelect.innerHTML+=`<option value="${c.toLowerCase()}">${c}</option>`;});
-
-  updateDetailCount();
-}
-
-function filterDetail(){
-  const q = document.getElementById('detailSearch').value.toLowerCase();
-  const pm = document.getElementById('detailPmFilter').value;
-  const svc = document.getElementById('detailSvcFilter').value;
-  const range = parseFloat(document.getElementById('detailRangeFilter').value)||0;
-  document.querySelectorAll('#detailBody tr').forEach(r=>{
-    const show = r.dataset.all.includes(q) &&
-      (!pm||r.dataset.pm===pm) &&
-      (!svc||r.dataset.cat===svc) &&
-      parseFloat(r.dataset.amt)>=range;
-    r.style.display=show?'':'none';
-  });
-  updateDetailCount();
-}
-
-function updateDetailCount(){
-  const visible = document.querySelectorAll('#detailBody tr:not([style*="display: none"])').length;
-  const total = document.querySelectorAll('#detailBody tr').length;
-  let sum = 0;
-  document.querySelectorAll('#detailBody tr:not([style*="display: none"])').forEach(r=>sum+=parseFloat(r.dataset.amt));
-  document.getElementById('detailCount').textContent = `${visible} of ${total} items | ${fmtK(sum)} shown`;
-}
-
-function sortDetail(col){
-  const rows = Array.from(document.querySelectorAll('#detailBody tr'));
-  if(detailSortCol===col) detailSortDir*=-1; else {detailSortCol=col;detailSortDir=1;}
-  rows.sort((a,b)=>{
-    let va,vb;
-    if(col===4){
-      va=parseFloat(a.dataset.amt);vb=parseFloat(b.dataset.amt);
-    } else {
-      va=a.children[col].textContent.toLowerCase();vb=b.children[col].textContent.toLowerCase();
-    }
-    return va>vb?detailSortDir:va<vb?-detailSortDir:0;
-  });
-  const body=document.getElementById('detailBody');
-  rows.forEach(r=>body.appendChild(r));
-}
-
-function exportCSV(){
-  let csv='PM,Project,Service,Amount,Category\n';
-  rawData.forEach(r=>{
-    csv+=`"${r[0]}","${r[1]}","${r[2]}",${r[3]},"${classify(r[2])}"\n`;
-  });
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='backlog_detail.csv';a.click();
-  URL.revokeObjectURL(url);
-}
-
-// ═══════════════════════════ INIT ═══════════════════════════
-renderTopPmChart();
-renderPmAccordion();
-renderCustomers();
-renderServices();
-renderDetail();
-</script>
-
-</body>
-</html>
+          <tr><td><span class="badge b-red">Mega</span></td><td>>
