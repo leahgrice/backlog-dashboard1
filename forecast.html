@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Current Q Forecast</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#f0f2f5;margin:0;color:#1a1a2e}
+header{background:#004B87;color:#fff;padding:18px 28px}
+main{padding:20px 28px;max-width:1300px;margin:auto}
+.card{background:#fff;border-radius:10px;padding:18px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kpis{display:flex;gap:14px;flex-wrap:wrap}.kpi{flex:1;min-width:170px;background:#fff;border-left:5px solid #0076CE;border-radius:8px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kpi b{display:block;font-size:24px}.kpi span{font-size:11px;text-transform:uppercase;color:#666}
+table{border-collapse:collapse;width:100%;font-size:13px}th{background:#004B87;color:#fff;padding:8px;text-align:left;cursor:pointer}
+td{padding:7px 8px;border-bottom:1px solid #ddd}td.r,th.r{text-align:right}tr:hover{background:#e8f4fd}
+select,input{padding:7px;margin-right:10px;border:1px solid #bbb;border-radius:6px}
+.bar{background:#0076CE;height:14px;border-radius:4px}
+.wrap{max-height:520px;overflow:auto}
+</style></head><body>
+<header><h2 style="margin:0">Current Quarter Forecast Dashboard</h2>
+<div style="font-size:13px;opacity:.85">Choose your forecast Excel file. It is read in your browser only and is not uploaded anywhere.</div></header>
+<main>
+<div class="card"><input type="file" id="f" accept=".xlsx,.xls,.csv">
+<span id="msg"></span></div>
+<div id="out" style="display:none">
+<div class="card">Timing: <select id="tm"></select> Status: <select id="st"></select>
+PM search: <input id="q" placeholder="name..."> <button onclick="exportCSV()">Export CSV</button></div>
+<div class="kpis" id="k"></div><br>
+<div class="card"><h3>By Revenue Category (Timing)</h3><div id="t1"></div></div>
+<div class="card"><h3>By PM</h3><div class="wrap" id="t2"></div></div>
+<div class="card"><h3>By Project</h3><div class="wrap" id="t3"></div></div>
+</div></main>
+<script>
+let data=[];
+const $=id=>document.getElementById(id);
+const fmt=n=>'$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+$('f').onchange=e=>{
+ const r=new FileReader();
+ r.onload=ev=>{
+  const wb=XLSX.read(ev.target.result,{type:'array'});
+  const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+  let h=rows.findIndex(r=>r.some(c=>/pm preferred name/i.test(c)));
+  if(h<0){$('msg').textContent='Could not find header row with "Pm Preferred Name".';return;}
+  const hd=rows[h].map(x=>String(x).trim());
+  const ix=(re,fb)=>{const i=hd.findIndex(c=>re.test(c));return i>=0?i:fb};
+  const cPM=ix(/pm preferred name/i,7),cPJ=ix(/^proj name/i,9),cTM=ix(/revenue category/i,5),
+        cAM=ix(/total qtr forecast/i,14),cST=ix(/proj stage/i,-1);
+  data=[];
+  for(let i=h+1;i<rows.length;i++){
+   const r=rows[i],pm=String(r[cPM]).trim(),a=parseFloat(r[cAM]);
+   if(!pm||/^total$/i.test(pm)||isNaN(a)||a===0)continue;
+   data.push({pm,proj:String(r[cPJ]),tm:String(r[cTM]),st:cST>=0?String(r[cST]):'n/a',amt:a});
+  }
+  $('msg').textContent=' Loaded '+data.length+' forecast lines (non-zero).';
+  fill('tm','tm');fill('st','st');$('out').style.display='block';render();
+ };r.readAsArrayBuffer(e.target.files[0]);
+};
+function fill(id,key){const s=$(id);s.innerHTML='<option value="">All</option>'+[...new Set(data.map(d=>d[key]))].sort().map(v=>`<option>${v}</option>`).join('');s.onchange=render;}
+$('q').oninput=render;
+function cur(){const t=$('tm').value,s=$('st').value,q=$('q').value.toLowerCase();
+ return data.filter(d=>(!t||d.tm===t)&&(!s||d.st===s)&&d.pm.toLowerCase().includes(q));}
+function grp(a,k){const m={};a.forEach(d=>{m[d[k]]=(m[d[k]]||0)+d.amt});return Object.entries(m).sort((x,y)=>y[1]-x[1]);}
+function tbl(g,tot,lbl){const mx=g[0]?g[0][1]:1;return `<table><tr><th>${lbl}</th><th class=r>Forecast</th><th class=r>% of Total</th><th style="width:25%"></th></tr>`+
+ g.map(([n,v])=>`<tr><td>${n}</td><td class=r>${fmt(v)}</td><td class=r>${(v/tot*100).toFixed(1)}%</td><td><div class=bar style="width:${v/mx*100}%"></div></td></tr>`).join('')+'</table>';}
+function render(){const a=cur(),tot=a.reduce((s,d)=>s+d.amt,0);
+ $('k').innerHTML=`<div class=kpi><span>Total Forecast</span><b>${fmt(tot)}</b></div>
+ <div class=kpi><span>Line Items</span><b>${a.length}</b></div>
+ <div class=kpi><span>PMs</span><b>${new Set(a.map(d=>d.pm)).size}</b></div>
+ <div class=kpi><span>Projects</span><b>${new Set(a.map(d=>d.proj)).size}</b></div>`;
+ $('t1').innerHTML=tbl(grp(a,'tm'),tot,'Revenue Category');
+ $('t2').innerHTML=tbl(grp(a,'pm'),tot,'PM');
+ $('t3').innerHTML=tbl(grp(a,'proj'),tot,'Project');}
+function exportCSV(){let c='PM,Project,Timing,Status,Forecast\n';cur().forEach(d=>c+=`"${d.pm}","${d.proj}","${d.tm}","${d.st}",${d.amt}\n`);
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c]));a.download='forecast_filtered.csv';a.click();}
+</script></body></html>
