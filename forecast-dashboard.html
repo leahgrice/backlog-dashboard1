@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Forecast & Backlog Dashboard</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#f0f2f5;margin:0;color:#1a1a2e;font-size:13px}
+header{background:#004B87;color:#fff;padding:14px 24px}h2{margin:0}.sub{opacity:.85}
+.card{background:#fff;border-radius:10px;padding:14px;margin:12px 24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.tabs{display:flex;flex-wrap:wrap;background:#002855;padding:0 24px}
+.tabs button{background:none;border:0;color:#cde;padding:10px 14px;cursor:pointer;font-weight:600;border-bottom:3px solid transparent}
+.tabs button.on{color:#fff;border-color:#00B4E5;background:rgba(255,255,255,.1)}
+main .card h3{margin:0 0 10px;color:#004B87}
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin:12px 24px}
+.kpi{flex:1;min-width:150px;background:#fff;border-left:5px solid #0076CE;border-radius:8px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kpi b{display:block;font-size:20px}.kpi span{font-size:10px;text-transform:uppercase;color:#666}
+.kpi.red{border-color:#dc3545}.kpi.grn{border-color:#28a745}.kpi.org{border-color:#e67e22}
+table{border-collapse:collapse;width:100%}th{background:#004B87;color:#fff;padding:6px;text-align:left;position:sticky;top:0}
+td{padding:5px 6px;border-bottom:1px solid #e3e3e3}.r{text-align:right}tr:hover td{background:#e8f4fd}tr.tot td{font-weight:700;background:#eef2ff}
+.wrap{max-height:480px;overflow:auto}.mute{color:#777}.warn{background:#fff3cd;border-left:5px solid #f0ad4e;padding:8px;margin:12px 24px}
+select,input,button.x{padding:5px;margin:2px 6px 2px 0}button.x{background:#0076CE;color:#fff;border:0;border-radius:6px;cursor:pointer;padding:6px 12px}
+.pos{color:#1a7f37}.neg{color:#c62828}
+@media print{.tabs,#load,#flt,.noprint{display:none!important}}
+</style></head><body>
+<header><h2>Forecast & Backlog Dashboard</h2><div class="sub">Files are read in your browser only. Nothing is uploaded.</div></header>
+<div class="card" id="load">
+This week file: <input type="file" id="f1" accept=".xlsx,.xls,.csv">
+Last week file (optional): <input type="file" id="f2" accept=".xlsx,.xls,.csv"><br>
+Quarter start <input type="date" id="qs" value="2026-11-02"> end <input type="date" id="qe" value="2027-01-29">
+Expected total backlog $<input id="exp" value="58649611" size="11"> <b id="msg"></b>
+<details><summary>Detected columns (check these)</summary><div id="map"></div></details></div>
+<div class="tabs" id="tabs"></div>
+<main><div class="card" id="flt" hidden>
+PM <select id="fPM"></select> Product <select id="fPR"></select> Category <select id="fCA"></select>
+Search <input id="fQ" placeholder="project...">
+<button class="x" onclick="exportXlsx()">Download Excel</button><button class="x" onclick="window.print()">Print / PDF</button></div>
+<div id="view"></div></main>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>(n<0?'-':'')+'$'+Math.abs(Math.round(n)).toLocaleString('en-US');
+const pct=(a,b)=>b?(a/b*100).toFixed(1)+'%':'0%';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=v=>{const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?0:n};
+const iso=d=>d?d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'):'';
+const prn=p=>{const m=String(p).match(/PR-\d+/i);return m?m[0].toUpperCase():''};
+const S=(a,k)=>a.reduce((s,o)=>s+o[k],0);
+const isFut=o=>/future/i.test(o.cat);
+let G1=null,G2=null,CUR=[],PRV=[],OVR={},M1={},HDR=[],tab=0,QS,QE;
+let RISK=JSON.parse(localStorage.getItem('risk')||'[]');
+const TABS=['Summary','Current Q Forecast','Forecast To Go','Burn & Remaining','Milestones','Future Q Backlog','Week over Week','Flagged','Risk & Opp','Data'];
+$('tabs').innerHTML=TABS.map((t,i)=>`<button id="t${i}" onclick="go(${i})">${t}</button>`).join('');
+const FIELDS=[['pm',[/pm preferred name/i]],['proj',[/^proj name/i]],['stage',[/proj stage/i,/project stage/i]],['cat',[/revenue category/i]],
+['ms',[/milestone name/i]],['msstat',[/milestone status/i]],['date',[/milestone target date/i,/target date/i]],['qtd',[/qtd/i]],['togo',[/to go/i]],
+['qf',[/total qtr forecast/i]],['bl',[/backlog.*\(usd\)/i,/^backlog$/i]],['item',[/^(revenue )?order item( id| num| number)?$/i,/order num/i]]];
+const TE=[[/RESIDENCY|RESIDENT/,'Residency'],[/\bRACKS?\b|INTER-RACK|LIQUID COOL|POWER-UP/,'Rack Integration / HPC'],[/SANITIZ|ERASURE/,'Data Sanitization'],
+[/REDEMPTION|REMDCM/,'Redemption'],[/MIGRAT/,'Migration'],[/POWERFLEX|VXRAIL|VCF|VSAN|HCI|NUTANIX/,'HCI'],[/POWERSCALE|ISILON|A3100|F710|F910/,'PowerScale'],
+[/DATA DOMAIN|DD9\d{3}|DD6410|PPDM|DDVE|AVAMAR|POWERPROTECT|CYBERVAULT/,'Data Protection'],[/POWERMAX|PMAX|SRDF/,'PowerMax'],[/POWERSTORE/,'PowerStore'],
+[/CONNECTRIX|BROCADE|SWITCH|SONIC/,'Networking / SAN'],[/POWEREDGE|XE9780|XE7740|XE7745|R760|R6725|R4715|SERVER/,'PowerEdge Server'],[/\bECS\b|OBJECTSCALE/,'ECS / Object']];
+const prod=t=>{const u=t.toUpperCase();for(const[r,n]of TE)if(r.test(u))return n;return 'Other / Unclassified'};
+
+function grid(wb){for(const n of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:'',raw:true});
+ const h=rows.findIndex(r=>r.some(c=>/pm preferred name/i.test(String(c))));if(h>=0)return{rows,h}}return null}
+const hdrOf=g=>g.rows[g.h].map(x=>String(x).trim());
+function detect(hdr,rows,h,ovr){const m={};
+ for(const[k,res]of FIELDS){m[k]=-1;if(ovr[k]){const i=hdr.indexOf(ovr[k]);if(i>=0){m[k]=i;continue}}
+  for(const re of res){const i=hdr.findIndex(c=>re.test(c));if(i>=0){m[k]=i;break}}}
+ if(m.item<0){for(let c=0;c<hdr.length&&m.item<0;c++){let hit=0,n=0;for(let i=h+1;i<Math.min(rows.length,h+60);i++){n++;if(/^10\d{8}$/.test(String(rows[i][c])))hit++}if(n&&hit/n>0.6)m.item=c}}
+ return m}
+function toDate(v){if(v instanceof Date)return v;const s=String(v);if(/^\d{4}-\d\d-\d\d/.test(s))return new Date(s.slice(0,10)+'T00:00:00');return null}
+function parse(rows,h,m){const out=[];for(let i=h+1;i<rows.length;i++){const r=rows[i];const pm=String(m.pm>=0?r[m.pm]:'').trim();if(!pm||/total/i.test(pm))continue;
+ const g=k=>m[k]>=0?r[m[k]]:'';const proj=String(g('proj'));
+ const o={pm,proj,pr:prn(proj),stage:String(g('stage')),cat:String(g('cat')),ms:String(g('ms')),msstat:String(g('msstat')),date:toDate(g('date')),
+ qtd:num(g('qtd')),togo:num(g('togo')),qf:num(g('qf')),bl:num(g('bl')),item:String(g('item'))};
+ o.key=(o.item||o.pr||o.proj)+'|'+o.ms;o.prod=prod(proj+' '+o.ms);out.push(o)}return out}
+function flags(o){const f=[],s=(o.stage+' '+o.msstat).toLowerCase();
+ if(/hold/.test(s))f.push('On Hold');if(/cancel/.test(s))f.push('Cancelled');if(/closure/.test(s))f.push('Closure');
+ if(o.date){if(/this quarter/i.test(o.cat)&&o.date>QE)f.push('Target after Q end');if(isFut(o)&&o.date>=QS&&o.date<=QE)f.push('Target in Q, not forecast')}
+ return f}
+
+async function load(){const a=$('f1').files[0],b=$('f2').files[0];
+ if(a){G1=grid(XLSX.read(await a.arrayBuffer(),{type:'array',cellDates:true}));if(!G1){$('msg').textContent='No "Pm Preferred Name" header row found in this week file.';return}}
+ if(b){G2=grid(XLSX.read(await b.arrayBuffer(),{type:'array',cellDates:true}))}
+ run()}
+$('f1').onchange=load;$('f2').onchange=load;
+function run(){if(!G1)return;HDR=hdrOf(G1);M1=detect(HDR,G1.rows,G1.h,OVR);CUR=parse(G1.rows,G1.h,M1);
+ PRV=G2?parse(G2.rows,G2.h,detect(hdrOf(G2),G2.rows,G2.h,OVR)):[];
+ const miss=['pm','proj','bl','qf','togo'].filter(k=>M1[k]<0);
+ const tot=S(CUR,'bl'),ex=num($('exp').value),d=tot-ex;
+ $('msg').innerHTML=`Rows: ${CUR.length} | Backlog total: ${fmt(tot)} | Expected: ${fmt(ex)} | Difference: <span class="${Math.abs(d)>ex*0.01?'neg':'pos'}">${fmt(d)}</span>`+(miss.length?` | <span class="neg">Missing columns: ${miss.join(', ')}</span>`:'')+(M1.item<0?' | <span class="neg">No order-item column found, week-over-week may be inaccurate</span>':'');
+ $('map').innerHTML=FIELDS.map(([k])=>`${k}: <select onchange="OVR['${k}']=this.value;run()"><option value="">(none)</option>${HDR.map(h=>`<option ${HDR[M1[k]]===h?'selected':''}>${esc(h)}</option>`).join('')}</select> `).join('<br>');
+ const fill=(id,vals)=>{const cur=$(id).value;$(id).innerHTML='<option value="">All</option>'+[...new Set(vals)].filter(Boolean).sort().map(v=>`<option>${esc(v)}</option>`).join('');$(id).value=cur;$(id).onchange=draw};
+ fill('fPM',CUR.map(o=>o.pm));fill('fPR',CUR.map(o=>o.prod));fill('fCA',CUR.map(o=>o.cat));$('fQ').oninput=draw;$('qs').onchange=draw;$('qe').onchange=draw;$('exp').onchange=run;
+ $('flt').hidden=false;draw()}
+const f=o=>(!$('fPM').value||o.pm===$('fPM').value)&&(!$('fPR').value||o.prod===$('fPR').value)&&(!$('fCA').value||o.cat===$('fCA').value)&&o.proj.toLowerCase().includes($('fQ').value.toLowerCase());
+function go(i){tab=i;draw()}
+
+function tbl(cols,rows,max){max=max||1500;let h='<div class="wrap"><table><tr>'+cols.map(c=>`<th class="${c.r?'r':''}">${c.h}</th>`).join('')+'</tr>';
+ rows.slice(0,max).forEach(r=>{h+=`<tr${r.tot?' class="tot"':''}>`+cols.map(c=>`<td class="${c.r?'r':''}">${c.f(r)}</td>`).join('')+'</tr>'});
+ return h+'</table></div>'+(rows.length>max?`<p class="mute">Showing first ${max} of ${rows.length}. Use Download Excel for all rows.</p>`:'')}
+function grp(a,kf){const m={};a.forEach(o=>{const k=kf(o)||'(blank)';const x=m[k]||(m[k]={k,n:0,bl:0,togo:0,qtd:0,qf:0});x.n++;x.bl+=o.bl;x.togo+=o.togo;x.qtd+=o.qtd;x.qf+=o.qf});return Object.values(m)}
+function gtbl(label,list,sf){list=list.slice().sort(sf||((x,y)=>y.qf-x.qf));
+ const t={k:'TOTAL',tot:1,n:S(list,'n'),bl:S(list,'bl'),togo:S(list,'togo'),qtd:S(list,'qtd'),qf:S(list,'qf')};
+ return tbl([{h:label,f:r=>esc(r.k)},{h:'Lines',f:r=>r.n,r:1},{h:'Current Q Forecast',f:r=>fmt(r.qf),r:1},{h:'QTD Earned',f:r=>fmt(r.qtd),r:1},
+ {h:'Forecast To Go',f:r=>fmt(r.togo),r:1},{h:'Total Backlog',f:r=>fmt(r.bl),r:1},{h:'Remaining Backlog',f:r=>fmt(r.bl-r.togo),r:1},{h:'Burn %',f:r=>pct(r.togo,r.bl),r:1}],list.concat([t]))}
+function projRows(a){const m={};a.forEach(o=>{const k=o.pr||o.proj;const x=m[k]||(m[k]={proj:o.proj,pm:o.pm,prod:o.prod,pr:o.pr,bl:0,togo:0,qf:0,qtd:0,d1:null,d2:null,fl:new Set()});
+ x.bl+=o.bl;x.togo+=o.togo;x.qf+=o.qf;x.qtd+=o.qtd;if(o.date){if(!x.d1||o.date<x.d1)x.d1=o.date;if(!x.d2||o.date>x.d2)x.d2=o.date}o.flags.forEach(z=>x.fl.add(z))});return Object.values(m)}
+const projCols=[{h:'PR',f:r=>r.pr},{h:'PM',f:r=>esc(r.pm)},{h:'Project',f:r=>esc(r.proj)},{h:'Product',f:r=>r.prod},{h:'Earliest Target',f:r=>iso(r.d1)},{h:'Latest Target',f:r=>iso(r.d2)},
+{h:'Forecast To Go',f:r=>fmt(r.togo),r:1},{h:'Backlog',f:r=>fmt(r.bl),r:1},{h:'Flags',f:r=>[...r.fl].join(', ')}];
+const kpi=(l,v,c)=>`<div class="kpi ${c||''}"><span>${l}</span><b>${v}</b></div>`;
+
+function agg(arr){const m={};arr.forEach(o=>{const x=m[o.key]||(m[o.key]={...o,qf:0});x.qf+=o.qf});return m}
+function wowCalc(){const a=agg(CUR.filter(f)),b=agg(PRV.filter(f));const items=[];
+ new Set([...Object.keys(a),...Object.keys(b)]).forEach(k=>{const x=a[k],y=b[k],t=x?x.qf:0,l=y?y.qf:0,base=x||y,d=t-l;if(Math.abs(d)<0.005)return;
+  let st=t>0&&l<=0?'Moved IN':t<=0&&l>0?'Moved OUT':d>0?'Increased':'Decreased';
+  items.push({pm:base.pm,proj:base.proj,pr:base.pr,prod:base.prod,ms:base.ms,this:t,last:l,delta:d,st,cThis:x?x.cat:'(not in file)',cLast:y?y.cat:'(not in file)',dThis:x?iso(x.date):'',dLast:y?iso(y.date):''})});
+ items.sort((p,q)=>Math.abs(q.delta)-Math.abs(p.delta));
+ const pm={};items.forEach(i=>{const k=i.pr||i.proj;const x=pm[k]||(pm[k]={proj:i.proj,pm:i.pm,pr:i.pr,prod:i.prod,inn:0,out:0,chg:0,net:0});
+  if(i.st==='Moved IN')x.inn+=i.delta;else if(i.st==='Moved OUT')x.out+=i.delta;else x.chg+=i.delta;x.net+=i.delta});
+ const projs=Object.values(pm).sort((p,q)=>Math.abs(q.net)-Math.abs(p.net));
+ return{items,projs,thisT:Object.values(a).reduce((s,o)=>s+o.qf,0),lastT:Object.values(b).reduce((s,o)=>s+o.qf,0),
+ inn:S(projs,'inn'),out:S(projs,'out'),chg:S(projs,'chg')}}
+const projWowCols=[{h:'PR',f:r=>r.pr},{h:'PM',f:r=>esc(r.pm)},{h:'Project',f:r=>esc(r.proj)},{h:'Product',f:r=>r.prod},
+{h:'Moved IN',f:r=>fmt(r.inn),r:1},{h:'Moved OUT',f:r=>fmt(r.out),r:1},{h:'Amount Changes',f:r=>fmt(r.chg),r:1},{h:'Net',f:r=>`<b class="${r.net>=0?'pos':'neg'}">${fmt(r.net)}</b>`,r:1}];
+
+function riskT(){const risk=RISK.filter(r=>/risk/i.test(r.type)).reduce((s,r)=>s+num(r.amt),0),opp=RISK.filter(r=>/opp/i.test(r.type)).reduce((s,r)=>s+num(r.amt),0);return{risk,opp}}
+function kpis(a){const T={bl:S(a,'bl'),togo:S(a,'togo'),qtd:S(a,'qtd'),qf:S(a,'qf')},fut=S(a.filter(isFut),'bl'),
+ fl=a.filter(o=>o.flags.some(x=>/Hold|Cancel|Closure/.test(x)));const R=riskT();
+ return[['Total Backlog',T.bl],['Current Q Forecast (earned + to go)',T.qf],['QTD Earned',T.qtd],['Forecast To Go',T.togo],['Burn % (To Go / Backlog)',pct(T.togo,T.bl)],
+ ['Remaining Backlog (Backlog - To Go)',T.bl-T.togo],['Future Q Backlog',fut],['Flagged Forecast To Go (Hold/Cancel/Closure)',S(fl,'togo')],['Flagged Backlog',S(fl,'bl')],
+ ['Risk',R.risk],['Opportunity',R.opp],['Risk/Opp Adjusted Forecast To Go',T.togo-R.risk+R.opp]]}
+
+function draw(){if(!CUR.length)return;QS=new Date($('qs').value+'T00:00:00');QE=new Date($('qe').value+'T00:00:00');
+ CUR.forEach(o=>o.flags=flags(o));PRV.forEach(o=>o.flags=[]);
+ TABS.forEach((t,i)=>$('t'+i).classList.toggle('on',i===tab));
+ const a=CUR.filter(f);let h='';
+ const K=kpis(a);const kh=K.map(([l,v],i)=>kpi(l,typeof v==='number'?fmt(v):v,[0,1,2,3,4,5,6].includes(i)?'':(i===7||i===8||i===9)?'red':'grn')).join('');
+ if(tab===0){const W=PRV.length?wowCalc():null;
+  h=`<div class="kpis">${kh}</div>`;
+  if(W)h+=`<div class="kpis">${kpi('Last Week Forecast',fmt(W.lastT))}${kpi('This Week Forecast',fmt(W.thisT))}${kpi('Net Change',fmt(W.thisT-W.lastT),W.thisT>=W.lastT?'grn':'red')}${kpi('Moved IN',fmt(W.inn),'grn')}${kpi('Moved OUT',fmt(W.out),'red')}${kpi('Amount Changes',fmt(W.chg),'org')}</div>`;
+  else h+='<div class="warn">Load last week\'s file to see week-over-week changes.</div>';
+  h+=`<div class="card"><h3>Forecast by Product</h3>${gtbl('Product',grp(a,o=>o.prod))}</div>
+  <div class="card"><h3>Forecast by Revenue Category</h3>${gtbl('Category',grp(a,o=>o.cat))}</div>
+  <div class="card"><h3>Top 10 PMs by Forecast</h3>${gtbl('PM',grp(a,o=>o.pm).sort((x,y)=>y.qf-x.qf).slice(0,10))}</div>`;
+  if(W)h+=`<div class="card"><h3>Top 10 Movers (week over week)</h3>${tbl(projWowCols,W.projs.slice(0,10))}</div>`;
+  const fl=projRows(a.filter(o=>o.flags.some(x=>/Hold|Cancel|Closure/.test(x)))).sort((x,y)=>y.togo-x.togo).slice(0,10);
+  h+=`<div class="card"><h3>Top 10 Flagged Projects (On Hold / Cancelled / Closure)</h3>${tbl(projCols,fl)}</div>
+  <div class="card"><h3>Definitions</h3><p class="mute">Burn % = Forecast To Go / Total Backlog. Remaining Backlog = Total Backlog - Forecast To Go. Current Q Forecast = earned QTD plus forecast to go. Week-over-week compares Total Qtr Forecast by order item and milestone. Products are derived from keywords in the project name.</p></div>`}
+ if(tab===1)h=`<div class="kpis">${kh}</div><div class="card"><h3>By Revenue Category</h3>${gtbl('Category',grp(a,o=>o.cat))}</div><div class="card"><h3>By Product</h3>${gtbl('Product',grp(a,o=>o.prod))}</div>
+  <div class="card"><h3>By PM</h3>${gtbl('PM',grp(a,o=>o.pm))}</div><div class="card"><h3>By Project Stage</h3>${gtbl('Stage',grp(a,o=>o.stage))}</div>`;
+ if(tab===2){const p=projRows(a.filter(o=>o.togo>0)).sort((x,y)=>y.togo-x.togo);h=`<div class="kpis">${kh}</div><div class="card"><h3>Projects With Forecast To Go</h3>${tbl(projCols,p)}</div>`}
+ if(tab===3){const bs=(x,y)=>y.bl-x.bl;h=`<div class="kpis">${kh}</div><div class="card"><h3>Burn by Product</h3>${gtbl('Product',grp(a,o=>o.prod),bs)}</div><div class="card"><h3>Burn by PM</h3>${gtbl('PM',grp(a,o=>o.pm),bs)}</div><div class="card"><h3>Burn by Category</h3>${gtbl('Category',grp(a,o=>o.cat),bs)}</div>`}
+ if(tab===4){const m=a.filter(o=>o.qf>0).sort((x,y)=>(x.date||0)-(y.date||0));
+  h=`<div class="card"><h3>Forecast To Go by Target Month</h3>${gtbl('Month',grp(a.filter(o=>o.togo>0),o=>o.date?iso(o.date).slice(0,7):'(no date)'),(x,y)=>x.k<y.k?-1:1)}</div>
+  <div class="card"><h3>Forecasted Milestones and Target Dates</h3>${tbl([{h:'Target Date',f:r=>iso(r.date)},{h:'PM',f:r=>esc(r.pm)},{h:'Project',f:r=>esc(r.proj)},{h:'Milestone',f:r=>esc(r.ms)},{h:'Category',f:r=>r.cat},{h:'Stage',f:r=>r.stage},
+  {h:'QTD',f:r=>fmt(r.qtd),r:1},{h:'To Go',f:r=>fmt(r.togo),r:1},{h:'Forecast',f:r=>fmt(r.qf),r:1},{h:'Flags',f:r=>r.flags.join(', ')}],m,2000)}</div>`}
+ if(tab===5){const fu=a.filter(isFut);h=`<div class="kpis">${kpi('Future Q Backlog',fmt(S(fu,'bl')))}${kpi('Lines',fu.length)}${kpi('Flagged (hold/cancel/closure)',fmt(S(fu.filter(o=>o.flags.some(x=>/Hold|Cancel|Closure/.test(x))),'bl')),'red')}${kpi('Target date inside this quarter',fmt(S(fu.filter(o=>o.flags.includes('Target in Q, not forecast')),'bl')),'org')}</div>
+  <div class="card"><h3>By Target Month</h3>${gtbl('Month',grp(fu,o=>o.date?iso(o.date).slice(0,7):'(no date)'),(x,y)=>x.k<y.k?-1:1)}</div>
+  <div class="card"><h3>By Product</h3>${gtbl('Product',grp(fu,o=>o.prod),(x,y)=>y.bl-x.bl)}</div><div class="card"><h3>By PM</h3>${gtbl('PM',grp(fu,o=>o.pm),(x,y)=>y.bl-x.bl)}</div>
+  <div class="card"><h3>Projects</h3>${tbl(projCols,projRows(fu).sort((x,y)=>y.bl-x.bl))}</div>`}
+ if(tab===6){if(!PRV.length)h='<div class="warn">Load last week\'s file (top of page) to see what moved in and out of the forecast.</div>';else{const W=wowCalc();
+  h=`<div class="kpis">${kpi('Last Week',fmt(W.lastT))}${kpi('This Week',fmt(W.thisT))}${kpi('Net Change',fmt(W.thisT-W.lastT),W.thisT>=W.lastT?'grn':'red')}${kpi('Moved IN',fmt(W.inn),'grn')}${kpi('Moved OUT',fmt(W.out),'red')}${kpi('Amount Changes',fmt(W.chg),'org')}</div>
+  <div class="card"><h3>By Project</h3>${tbl(projWowCols,W.projs)}</div>
+  <div class="card"><h3>Line Detail</h3>${tbl([{h:'Status',f:r=>r.st},{h:'PM',f:r=>esc(r.pm)},{h:'Project',f:r=>esc(r.proj)},{h:'Milestone',f:r=>esc(r.ms)},{h:'Last Week',f:r=>fmt(r.last),r:1},{h:'This Week',f:r=>fmt(r.this),r:1},{h:'Change',f:r=>fmt(r.delta),r:1},
+  {h:'Category Last',f:r=>r.cLast},{h:'Category This',f:r=>r.cThis},{h:'Target Last',f:r=>r.dLast},{h:'Target This',f:r=>r.dThis}],W.items,800)}</div>`}}
+ if(tab===7){const fl=a.filter(o=>o.flags.length&&(o.bl>0||o.qf>0)).sort((x,y)=>y.bl-x.bl);const fg={};
+  fl.forEach(o=>o.flags.forEach(z=>{const x=fg[z]||(fg[z]={k:z,n:0,bl:0,togo:0,qtd:0,qf:0});x.n++;x.bl+=o.bl;x.togo+=o.togo;x.qtd+=o.qtd;x.qf+=o.qf}));
+  h=`<div class="card"><h3>Flag Summary</h3>${gtbl('Flag',Object.values(fg),(x,y)=>y.bl-x.bl)}</div><div class="card"><h3>Lines for Review</h3>${tbl([{h:'Flags',f:r=>r.flags.join(', ')},{h:'PM',f:r=>esc(r.pm)},{h:'Project',f:r=>esc(r.proj)},{h:'Milestone',f:r=>esc(r.ms)},{h:'Category',f:r=>r.cat},{h:'Stage',f:r=>r.stage},{h:'Target',f:r=>iso(r.date)},{h:'To Go',f:r=>fmt(r.togo),r:1},{h:'Backlog',f:r=>fmt(r.bl),r:1}],fl,2000)}</div>`}
+ if(tab===8){const R=riskT(),prs=[...new Set(CUR.map(o=>o.pr).filter(Boolean))],pj=projRows(CUR);
+  h=`<div class="kpis">${kpi('Risk',fmt(R.risk),'red')}${kpi('Opportunity',fmt(R.opp),'grn')}${kpi('Forecast To Go',fmt(S(CUR,'togo')))}${kpi('Risk/Opp Adjusted',fmt(S(CUR,'togo')-R.risk+R.opp))}</div>
+  <div class="card"><h3>Add Risk / Opportunity</h3>PR # <input id="rp" list="prl" size="12" placeholder="PR-3142940"><datalist id="prl">${prs.map(p=>`<option>${p}</option>`).join('')}</datalist>
+  Type <select id="rt"><option>Risk</option><option>Opp</option></select> Amount $<input id="ra" size="10"> Comment <input id="rc" size="30"> Owner <input id="ro" size="10">
+  <button class="x" onclick="addRisk()">Add</button><button class="x" onclick="exportRisk()">Export CSV</button> Import: <input type="file" id="rf" onchange="importRisk(this)"><p class="mute">Saved in this browser only. Export to keep a copy or move it to another computer.</p></div>
+  <div class="card">${tbl([{h:'PR',f:r=>r.pr},{h:'Project',f:r=>esc((pj.find(p=>p.pr===r.pr)||{}).proj||'(not in file)')},{h:'PM',f:r=>esc((pj.find(p=>p.pr===r.pr)||{}).pm||'')},{h:'Type',f:r=>r.type},{h:'Amount',f:r=>fmt(num(r.amt)),r:1},{h:'Comment',f:r=>esc(r.note||'')},{h:'Owner',f:r=>esc(r.owner||'')},{h:'',f:r=>`<a href="#" onclick="delRisk(${RISK.indexOf(r)});return false">remove</a>`}],RISK)}</div>`}
+ if(tab===9)h=`<div class="card"><h3>Data (${a.length} lines)</h3>${tbl([{h:'PM',f:r=>esc(r.pm)},{h:'Project',f:r=>esc(r.proj)},{h:'Product',f:r=>r.prod},{h:'Milestone',f:r=>esc(r.ms)},{h:'Category',f:r=>r.cat},{h:'Stage',f:r=>r.stage},{h:'Target',f:r=>iso(r.date)},
+  {h:'QTD',f:r=>fmt(r.qtd),r:1},{h:'To Go',f:r=>fmt(r.togo),r:1},{h:'Forecast',f:r=>fmt(r.qf),r:1},{h:'Backlog',f:r=>fmt(r.bl),r:1},{h:'Flags',f:r=>r.flags.join(', ')}],a,2000)}</div>`;
+ $('view').innerHTML=h}
+
+function addRisk(){let p=$('rp').value.trim().toUpperCase();if(/^\d+$/.test(p))p='PR-'+p;if(!p||!num($('ra').value))return;
+ RISK.push({pr:p,type:$('rt').value,amt:num($('ra').value),note:$('rc').value,owner:$('ro').value});localStorage.setItem('risk',JSON.stringify(RISK));draw()}
+function delRisk(i){RISK.splice(i,1);localStorage.setItem('risk',JSON.stringify(RISK));draw()}
+function exportRisk(){let c='PR,Type,Amount,Comment,Owner\n';RISK.forEach(r=>c+=[r.pr,r.type,r.amt,'"'+(r.note||'').replace(/"/g,'""')+'"',r.owner||''].join(',')+'\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c]));a.download='risk_opp.csv';a.click()}
+async function importRisk(el){const wb=XLSX.read(await el.files[0].arrayBuffer(),{type:'array'});const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+ RISK=rows.map(r=>{const g=n=>r[Object.keys(r).find(k=>k.toLowerCase()===n)]??'';return{pr:String(g('pr')).toUpperCase(),type:String(g('type')),amt:num(g('amount')),note:String(g('comment')),owner:String(g('owner'))}}).filter(r=>r.pr);
+ localStorage.setItem('risk',JSON.stringify(RISK));draw()}
+
+function exportXlsx(){const a=CUR.filter(f),wb=XLSX.utils.book_new(),add=(n,rows)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),n);
+ const gr=(l,list)=>list.map(r=>({[l]:r.k,Lines:r.n,'Current Q Forecast':r.qf,'QTD Earned':r.qtd,'Forecast To Go':r.togo,'Total Backlog':r.bl,'Remaining Backlog':r.bl-r.togo,'Burn %':r.bl?r.togo/r.bl:0}));
+ const pr=l=>l.map(r=>({PR:r.pr,PM:r.pm,Project:r.proj,Product:r.prod,'Earliest Target':iso(r.d1),'Latest Target':iso(r.d2),'Forecast To Go':r.togo,Backlog:r.bl,'Current Q Forecast':r.qf,Flags:[...r.fl].join(', ')}));
+ const det=l=>l.map(o=>({PM:o.pm,Project:o.proj,PR:o.pr,Product:o.prod,Milestone:o.ms,Category:o.cat,Stage:o.stage,'Target Date':iso(o.date),QTD:o.qtd,'Forecast To Go':o.togo,'Total Qtr Forecast':o.qf,Backlog:o.bl,Flags:o.flags.join(', ')}));
+ add('Summary',kpis(a).map(([k,v])=>({Metric:k,Value:v})));add('Data',det(a));add('By Product',gr('Product',grp(a,o=>o.prod)));add('By PM',gr('PM',grp(a,o=>o.pm)));add('By Category',gr('Category',grp(a,o=>o.cat)));
+ add('Projects',pr(projRows(a)));add('Milestones',det(a.filter(o=>o.qf>0).sort((x,y)=>(x.date||0)-(y.date||0))));add('Future Q Backlog',det(a.filter(isFut)));add('Flagged',det(a.filter(o=>o.flags.length&&(o.bl>0||o.qf>0))));
+ if(PRV.length){const W=wowCalc();add('WoW Projects',W.projs.map(r=>({PR:r.pr,PM:r.pm,Project:r.proj,Product:r.prod,'Moved IN':r.inn,'Moved OUT':r.out,'Amount Changes':r.chg,Net:r.net})));
+  add('WoW Items',W.items.map(r=>({Status:r.st,PM:r.pm,Project:r.proj,Milestone:r.ms,'Last Week':r.last,'This Week':r.this,Change:r.delta,'Category Last':r.cLast,'Category This':r.cThis,'Target Last':r.dLast,'Target This':r.dThis})))}
+ add('Risk_Opp',RISK.map(r=>({PR:r.pr,Type:r.type,Amount:r.amt,Comment:r.note,Owner:r.owner})));XLSX.writeFile(wb,'Forecast_Backlog_Analysis.xlsx')}
+</script></body></html>
