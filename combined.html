@@ -36,7 +36,7 @@ Status <select id="fST"></select> Timing <select id="fTM"></select> Search <inpu
 <script>
 const $=id=>document.getElementById(id);
 const fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
-let F=[],B=[],FA={},cur='Overview';
+let F=[],B=[],FA={},cur='Overview',BNOTE='';
 const TABS=['Overview','Forecast','Backlog','Not Forecasted','PM Compare','Customer Compare','Technology','Detail'];
 $('tabs').innerHTML=TABS.map(t=>`<button onclick="go('${t}')" id="t_${t.replace(' ','')}">${t}</button>`).join('');
 
@@ -52,6 +52,7 @@ function find(rows,re){return rows.findIndex(r=>r.some(c=>re.test(String(c))))}
 function col(hd,re){return hd.findIndex(c=>re.test(c))}
 const num=v=>{const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?0:n};
 
+// ---------- FORECAST LOADER ----------
 $('ff').onchange=e=>readFile(e.target.files[0],rows=>{
  const h=find(rows,/pm preferred name/i);if(h<0){$('msg').textContent='Forecast: header "Pm Preferred Name" not found';return}
  const hd=rows[h].map(x=>String(x).trim());
@@ -65,20 +66,32 @@ $('ff').onchange=e=>readFile(e.target.files[0],rows=>{
   F.push({src:'Forecast',pm,proj:p,pr:k,cu:cust(p),te:tech(p),tm:t,st:c.st>=0?String(r[c.st]):'',amt:a})}
  done()});
 
+// ---------- BACKLOG LOADER (subtotals removed) ----------
 $('bf').onchange=e=>readFile(e.target.files[0],rows=>{
  const h=find(rows,/pm preferred name|^pm$/i);if(h<0){$('msg').textContent='Backlog: PM header not found';return}
  const hd=rows[h].map(x=>String(x).trim());
  let am=col(hd,/backlog/i);if(am<0)am=col(hd,/amount|total/i);
- const c={pm:col(hd,/pm preferred name|^pm$/i),pj:col(hd,/proj name|^project/i)};
+ const c={pm:col(hd,/pm preferred name|^pm$/i),pj:col(hd,/proj name|^project/i),nm:col(hd,/^name$|service|milestone/i)};
  if(am<0||c.pj<0){$('msg').textContent='Backlog: missing Proj Name or amount column';return}
- B=[];let lastPM='',lastPJ='';
- for(let i=h+1;i<rows.length;i++){const r=rows[i];let pm=String(r[c.pm]).trim(),p=String(r[c.pj]).trim();
-  if(pm)lastPM=pm;else pm=lastPM;if(p)lastPJ=p;else p=lastPJ;
-  const a=num(r[am]);if(!pm||/total|\(blank\)/i.test(pm)||a===0)continue;
+ const isTot=s=>/^(grand\s+)?total\b/i.test(s)||/\btotal$/i.test(s)||/^\(blank\)$/i.test(s);
+ B=[];let lastPM='',lastPJ='',exclAmt=0,exclRows=0,grand=0;
+ for(let i=h+1;i<rows.length;i++){const r=rows[i];
+  const rawPM=String(r[c.pm]).trim(),rawPJ=String(r[c.pj]).trim(),rawNM=c.nm>=0?String(r[c.nm]).trim():'',a=num(r[am]);
+  // 1) Total / Grand Total / (blank) labels
+  if(isTot(rawPM)||isTot(rawPJ)){exclAmt+=a;exclRows++;if(/^(grand\s+)?total$/i.test(rawPM)||/total total/i.test(rawPM))grand=Math.max(grand,a);continue}
+  // 2) PM label with no project and no service name = pivot subtotal row
+  if(rawPM&&!rawPJ&&!rawNM){exclAmt+=a;exclRows++;continue}
+  let pm=rawPM,p=rawPJ;
+  if(pm)lastPM=pm;else pm=lastPM;
+  if(p)lastPJ=p;else p=lastPJ;
+  if(!pm||a===0)continue;
   B.push({src:'Backlog',pm,proj:p,pr:prn(p),cu:cust(p),te:tech(p),tm:'Future Quarter',st:'',amt:a})}
+ const tot=B.reduce((s,d)=>s+d.amt,0);
+ BNOTE=`  |  Backlog total: ${fmt(tot)}  |  Subtotal/total rows excluded: ${exclRows} (${fmt(exclAmt)})`+
+  (grand?(Math.abs(tot-grand)<1?'  |  ✔ Matches pivot grand total':`  |  ⚠ Pivot grand total is ${fmt(grand)} (difference ${fmt(tot-grand)})`):'');
  done()});
 
-function done(){$('msg').textContent=`Forecast lines: ${F.length}  |  Backlog lines: ${B.length}`;
+function done(){$('msg').textContent=`Forecast lines: ${F.length}  |  Backlog lines: ${B.length}`+BNOTE;
  const all=F.concat(B);
  const fill=(id,k)=>{$(id).innerHTML='<option value="">All</option>'+[...new Set(all.map(d=>d[k]).filter(Boolean))].sort().map(v=>`<option>${v}</option>`).join('');$(id).onchange=draw};
  fill('fPM','pm');fill('fCU','cu');fill('fTE','te');fill('fST','st');fill('fTM','tm');$('fQ').oninput=draw;
