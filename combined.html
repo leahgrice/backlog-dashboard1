@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Backlog + Forecast Dashboard</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#f0f2f5;margin:0;color:#1a1a2e;font-size:13px}
+header{background:#004B87;color:#fff;padding:16px 26px}
+.tabs{display:flex;background:#002855;padding:0 26px;flex-wrap:wrap}
+.tabs button{background:none;border:0;color:#cfe;padding:11px 18px;cursor:pointer;font-weight:600;border-bottom:3px solid transparent}
+.tabs button.on{color:#fff;border-bottom-color:#00B4E5;background:rgba(255,255,255,.1)}
+main{padding:18px 26px;max-width:1400px;margin:auto}
+.card{background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kpis{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kpi{flex:1;min-width:160px;background:#fff;border-left:5px solid #0076CE;border-radius:8px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kpi b{display:block;font-size:22px}.kpi span{font-size:10px;text-transform:uppercase;color:#666}
+table{border-collapse:collapse;width:100%}th{background:#004B87;color:#fff;padding:7px;text-align:left;position:sticky;top:0;cursor:pointer}
+td{padding:6px 7px;border-bottom:1px solid #e3e3e3}.r{text-align:right}tr:hover td{background:#e8f4fd}
+select,input{padding:6px;margin:0 8px 6px 0;border:1px solid #bbb;border-radius:6px}
+.wrap{max-height:540px;overflow:auto}
+.bf{background:#0076CE;height:12px;border-radius:3px}.bb{background:#e67e22;height:12px;border-radius:3px;margin-top:2px}
+button.x{padding:6px 12px;background:#0076CE;color:#fff;border:0;border-radius:6px;cursor:pointer}
+.warn{background:#fff3cd;border-left:5px solid #f0ad4e;padding:10px;margin-bottom:12px;border-radius:6px}
+</style></head><body>
+<header><h2 style="margin:0">Backlog + Current Quarter Forecast</h2>
+<div style="opacity:.85">Files are read in your browser only. Nothing is uploaded.</div></header>
+<div class="card" style="margin:16px 26px 0">
+Forecast file: <input type="file" id="ff" accept=".xlsx,.xls,.csv">
+Backlog file: <input type="file" id="bf" accept=".xlsx,.xls,.csv"> <b id="msg"></b></div>
+<div class="tabs" id="tabs"></div>
+<main>
+<div class="card" id="flt" style="display:none">
+PM <select id="fPM"></select> Customer <select id="fCU"></select> Technology <select id="fTE"></select>
+Status <select id="fST"></select> Timing <select id="fTM"></select> Search <input id="fQ" placeholder="project...">
+<button class="x" onclick="csv()">Export CSV</button></div>
+<div id="views"></div></main>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
+let F=[],B=[],FA={},cur='Overview';
+const TABS=['Overview','Forecast','Backlog','Not Forecasted','PM Compare','Customer Compare','Technology','Detail'];
+$('tabs').innerHTML=TABS.map(t=>`<button onclick="go('${t}')" id="t_${t.replace(' ','')}">${t}</button>`).join('');
+
+const CU=[['NSCALE','NSCALE'],['JANE STREET','Jane Street'],['BANK OF AMERICA','Bank of America'],['GOLDMAN','Goldman Sachs'],['HSBC','HSBC'],['BLOOMBERG','Bloomberg'],['JPMORGAN','JPMorgan Chase'],['MORGAN STANLEY','Morgan Stanley'],['FIS_','FIS'],['FISERV','Fiserv'],['CHECKFREE','Fiserv'],['CIGNA','Cigna'],['CVS','CVS Health'],['UPS ','UPS'],['TRAVELERS','Travelers'],['HCA ','HCA Healthcare'],['SLOAN','MSKCC'],['MSK','MSKCC'],['MGB','Mass General Brigham'],['MASS GENERAL','Mass General Brigham'],['PARTNERS HEALTH','Mass General Brigham'],['PFIZER','Pfizer'],['MERCK','Merck'],['THERMO FISHER','Thermo Fisher'],['CHARTER','Charter'],['BRISTOL MYERS','Bristol Myers Squibb'],['STATE STREET','State Street'],['FEDEX','FedEx'],['FEDERAL EXPRESS','FedEx'],['COMCAST','Comcast'],['SUMITOMO','Sumitomo Mitsui'],['TOWER RESEARCH','Tower Research'],['HUDSON RIVER','Hudson River Trading'],['FLUIDSTACK','FluidStack'],['CORE42','Core42'],['WALGREEN','Walgreens'],['HARVARD','Harvard'],['JOHNS HOPKINS','Johns Hopkins'],['INTERSYSTEMS','InterSystems'],['NATIONAL GRID','National Grid'],['FREDDIE MAC','Freddie Mac'],['HIGHMARK','Highmark'],['BETH ISRAEL','Beth Israel Lahey'],['FUJIFILM','Fujifilm'],['T ROWE','T. Rowe Price'],['GE AEROSPACE','GE'],['GE VERNOVA','GE'],['GLOBALAI','GlobalAI'],['UKG','UKG'],['KRONOS','UKG'],['CABLEVISION','Cablevision'],['SANTANDER','Santander'],['CENCORA','Cencora'],['CATERPILLAR','Caterpillar'],['BOSTON SCIENTIFIC','Boston Scientific'],['NOVARTIS','Novartis']];
+const TE=[['RESIDENCY|RESIDENT','Residency'],['RACK|LIQUID COOL|POWER-UP','Rack Integration / HPC'],['SANITIZ|ERASURE','Data Sanitization'],['REDEMPTION|REMDCM','Redemption'],['MIGRAT','Migration'],['POWERFLEX|VXRAIL|VCF|VSAN|HCI','HCI'],['POWERSCALE|ISILON|A3100|F710|F910','PowerScale'],['DATA DOMAIN|DD9910|DD6410|PPDM|DDVE|AVAMAR|POWERPROTECT|CYBERVAULT','Data Protection'],['POWERMAX|PMAX|SRDF','PowerMax'],['POWERSTORE','PowerStore'],['CONNECTRIX|BROCADE|SWITCH|SONIC','Networking / SAN'],['POWEREDGE|XE9780|XE7740|XE7745|R760|R6725|R4715|SERVER','PowerEdge Server'],['ECS|OBJECTSCALE','ECS / Object']];
+function cust(p){const u=p.toUpperCase();for(const[k,v]of CU)if(u.includes(k))return v;return 'Other / Various'}
+function tech(p){const u=p.toUpperCase();for(const[k,v]of TE)if(k.split('|').some(x=>u.includes(x)))return v;return 'General Deployment'}
+function prn(p){const m=String(p).match(/PR-\d+/i);return m?m[0].toUpperCase():''}
+
+function readFile(file,cb){const r=new FileReader();r.onload=e=>{const wb=XLSX.read(e.target.result,{type:'array'});
+ cb(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''}))};r.readAsArrayBuffer(file)}
+function find(rows,re){return rows.findIndex(r=>r.some(c=>re.test(String(c))))}
+function col(hd,re){return hd.findIndex(c=>re.test(c))}
+const num=v=>{const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?0:n};
+
+$('ff').onchange=e=>readFile(e.target.files[0],rows=>{
+ const h=find(rows,/pm preferred name/i);if(h<0){$('msg').textContent='Forecast: header "Pm Preferred Name" not found';return}
+ const hd=rows[h].map(x=>String(x).trim());
+ const c={pm:col(hd,/pm preferred name/i),pj:col(hd,/^proj name/i),tm:col(hd,/revenue category/i),st:col(hd,/proj stage/i),am:col(hd,/total qtr forecast/i)};
+ if(c.am<0||c.pj<0){$('msg').textContent='Forecast: missing Proj Name or Total Qtr Forecast column';return}
+ F=[];FA={};
+ for(let i=h+1;i<rows.length;i++){const r=rows[i],pm=String(r[c.pm]).trim(),a=num(r[c.am]);
+  if(!pm||/^total$/i.test(pm))continue;const p=String(r[c.pj]),k=prn(p),t=c.tm>=0?String(r[c.tm]):'';
+  if(k){if(!FA[k])FA[k]={amt:0,tm:new Set()};FA[k].amt+=a;if(t)FA[k].tm.add(t)}
+  if(a===0)continue;
+  F.push({src:'Forecast',pm,proj:p,pr:k,cu:cust(p),te:tech(p),tm:t,st:c.st>=0?String(r[c.st]):'',amt:a})}
+ done()});
+
+$('bf').onchange=e=>readFile(e.target.files[0],rows=>{
+ const h=find(rows,/pm preferred name|^pm$/i);if(h<0){$('msg').textContent='Backlog: PM header not found';return}
+ const hd=rows[h].map(x=>String(x).trim());
+ let am=col(hd,/backlog/i);if(am<0)am=col(hd,/amount|total/i);
+ const c={pm:col(hd,/pm preferred name|^pm$/i),pj:col(hd,/proj name|^project/i)};
+ if(am<0||c.pj<0){$('msg').textContent='Backlog: missing Proj Name or amount column';return}
+ B=[];let lastPM='',lastPJ='';
+ for(let i=h+1;i<rows.length;i++){const r=rows[i];let pm=String(r[c.pm]).trim(),p=String(r[c.pj]).trim();
+  if(pm)lastPM=pm;else pm=lastPM;if(p)lastPJ=p;else p=lastPJ;
+  const a=num(r[am]);if(!pm||/total|\(blank\)/i.test(pm)||a===0)continue;
+  B.push({src:'Backlog',pm,proj:p,pr:prn(p),cu:cust(p),te:tech(p),tm:'Future Quarter',st:'',amt:a})}
+ done()});
+
+function done(){$('msg').textContent=`Forecast lines: ${F.length}  |  Backlog lines: ${B.length}`;
+ const all=F.concat(B);
+ const fill=(id,k)=>{$(id).innerHTML='<option value="">All</option>'+[...new Set(all.map(d=>d[k]).filter(Boolean))].sort().map(v=>`<option>${v}</option>`).join('');$(id).onchange=draw};
+ fill('fPM','pm');fill('fCU','cu');fill('fTE','te');fill('fST','st');fill('fTM','tm');$('fQ').oninput=draw;
+ $('flt').style.display='block';go(cur)}
+function go(t){cur=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.id==='t_'+t.replace(' ','')));draw()}
+function sel(){const v=id=>$(id).value,q=$('fQ').value.toLowerCase();
+ const f=d=>(!v('fPM')||d.pm===v('fPM'))&&(!v('fCU')||d.cu===v('fCU'))&&(!v('fTE')||d.te===v('fTE'))&&(!v('fST')||d.st===v('fST'))&&(!v('fTM')||d.tm===v('fTM'))&&d.proj.toLowerCase().includes(q);
+ return[F.filter(f),B.filter(f)]}
+function sum(a){return a.reduce((s,d)=>s+d.amt,0)}
+function grp(a,k){const m={};a.forEach(d=>m[d[k]]=(m[d[k]]||0)+d.amt);return m}
+function single(a,k,lbl){const g=Object.entries(grp(a,k)).sort((x,y)=>y[1]-x[1]),t=sum(a)||1;
+ return `<div class=wrap><table><tr><th>${lbl}</th><th class=r>Amount</th><th class=r>% of Total</th></tr>`+g.map(([n,v])=>`<tr><td>${n}</td><td class=r>${fmt(v)}</td><td class=r>${(v/t*100).toFixed(1)}%</td></tr>`).join('')+'</table></div>'}
+function cmp(f,b,k,lbl,top){const gf=grp(f,k),gb=grp(b,k),keys=[...new Set([...Object.keys(gf),...Object.keys(gb)])];
+ let rows=keys.map(n=>({n,f:gf[n]||0,b:gb[n]||0})).sort((x,y)=>(y.f+y.b)-(x.f+x.b));if(top)rows=rows.slice(0,top);
+ const mx=Math.max(...rows.map(r=>Math.max(r.f,r.b)),1);
+ return `<div class=wrap><table><tr><th>${lbl}</th><th class=r>Current Q Forecast</th><th class=r>Future Q Backlog</th><th class=r>Combined</th><th class=r>Forecast %</th><th style="width:28%">Forecast (blue) vs Backlog (orange)</th></tr>`+
+ rows.map(r=>`<tr><td>${r.n}</td><td class=r>${fmt(r.f)}</td><td class=r>${fmt(r.b)}</td><td class=r><b>${fmt(r.f+r.b)}</b></td><td class=r>${r.f+r.b?(r.f/(r.f+r.b)*100).toFixed(0):0}%</td><td><div class=bf style="width:${r.f/mx*100}%"></div><div class=bb style="width:${r.b/mx*100}%"></div></td></tr>`).join('')+'</table></div>'}
+
+// Backlog projects with no forecast dollars this quarter, matched by PR number
+function nf(b){const m={};
+ b.forEach(d=>{const k=d.pr||d.proj;if(!m[k])m[k]={pr:d.pr,pm:d.pm,proj:d.proj,cu:d.cu,te:d.te,amt:0};m[k].amt+=d.amt});
+ return Object.values(m).filter(x=>!(x.pr&&FA[x.pr]&&FA[x.pr].amt>0)).map(x=>{
+  x.reason=!x.pr?'No PR# in project name':FA[x.pr]?'In forecast file, $0 this quarter ('+[...FA[x.pr].tm].join(', ')+')':'Not in forecast file';
+  return x}).sort((a,b)=>b.amt-a.amt)}
+
+function draw(){const[f,b]=sel(),V=$('views');let h='';
+ const kp=`<div class=kpis><div class=kpi><span>Current Q Forecast</span><b>${fmt(sum(f))}</b></div><div class=kpi><span>Future Q Backlog</span><b>${fmt(sum(b))}</b></div><div class=kpi style="border-color:#28a745"><span>Combined</span><b>${fmt(sum(f)+sum(b))}</b></div><div class=kpi><span>PMs</span><b>${new Set(f.concat(b).map(d=>d.pm)).size}</b></div><div class=kpi><span>Forecast / Backlog lines</span><b>${f.length} / ${b.length}</b></div></div>`;
+ if(cur==='Overview')h=kp+`<div class=card><h3>Top 15 PMs</h3>${cmp(f,b,'pm','PM',15)}</div><div class=card><h3>By Technology</h3>${cmp(f,b,'te','Technology')}</div>`;
+ if(cur==='Forecast')h=kp+`<div class=card><h3>By Revenue Category (Timing)</h3>${single(f,'tm','Category')}</div><div class=card><h3>By Status</h3>${single(f,'st','Status')}</div><div class=card><h3>By PM</h3>${single(f,'pm','PM')}</div><div class=card><h3>By Project</h3>${single(f,'proj','Project')}</div>`;
+ if(cur==='Backlog')h=kp+`<div class=card><h3>By PM</h3>${single(b,'pm','PM')}</div><div class=card><h3>By Customer</h3>${single(b,'cu','Customer')}</div><div class=card><h3>By Technology</h3>${single(b,'te','Technology')}</div><div class=card><h3>By Project</h3>${single(b,'proj','Project')}</div>`;
+ if(cur==='Not Forecasted'){const n=nf(b),t=sum(n),bt=sum(b)||1;
+  const warn=F.length?'':'<div class=warn>Load the forecast file too. Without it every backlog project shows as not forecasted.</div>';
+  h=warn+`<div class=kpis><div class=kpi style="border-color:#dc3545"><span>Backlog Not Forecasted</span><b>${fmt(t)}</b></div><div class=kpi><span>Projects</span><b>${n.length}</b></div><div class=kpi><span>% of Filtered Backlog</span><b>${(t/bt*100).toFixed(1)}%</b></div><div class=kpi><span>PMs</span><b>${new Set(n.map(d=>d.pm)).size}</b></div></div>
+  <div class=card><h3>By Reason</h3>${single(n,'reason','Reason')}</div>
+  <div class=card><h3>By PM</h3>${single(n,'pm','PM')}</div>
+  <div class=card><h3>By Customer</h3>${single(n,'cu','Customer')}</div>
+  <div class=card><h3>Project List (backlog but no forecast this quarter)</h3><div class=wrap><table><tr><th>PR #</th><th>PM</th><th>Project</th><th>Customer</th><th>Technology</th><th class=r>Future Q Backlog</th><th>Reason</th></tr>`+
+  n.map(d=>`<tr><td>${d.pr}</td><td>${d.pm}</td><td>${d.proj}</td><td>${d.cu}</td><td>${d.te}</td><td class=r><b>${fmt(d.amt)}</b></td><td>${d.reason}</td></tr>`).join('')+`</table></div></div>`}
+ if(cur==='PM Compare')h=kp+`<div class=card>${cmp(f,b,'pm','PM')}</div>`;
+ if(cur==='Customer Compare')h=kp+`<div class=card>${cmp(f,b,'cu','Customer')}</div>`;
+ if(cur==='Technology')h=kp+`<div class=card>${cmp(f,b,'te','Technology')}</div>`;
+ if(cur==='Detail'){const a=f.concat(b).sort((x,y)=>y.amt-x.amt);
+  h=kp+`<div class=card><div class=wrap><table><tr><th>Source</th><th>PM</th><th>Project</th><th>Customer</th><th>Technology</th><th>Timing</th><th>Status</th><th class=r>Amount</th></tr>`+a.slice(0,3000).map(d=>`<tr><td>${d.src}</td><td>${d.pm}</td><td>${d.proj}</td><td>${d.cu}</td><td>${d.te}</td><td>${d.tm}</td><td>${d.st}</td><td class=r>${fmt(d.amt)}</td></tr>`).join('')+`</table></div>${a.length>3000?'<p>Showing top 3000 lines. Use filters or Export CSV for all.</p>':''}</div>`}
+ V.innerHTML=h}
+function dl(c,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c]));a.download=name;a.click()}
+function csv(){const[f,b]=sel();const q=x=>`"${String(x).replace(/"/g,'""')}"`;
+ if(cur==='Not Forecasted'){let c='PR,PM,Project,Customer,Technology,Backlog,Reason\n';
+  nf(b).forEach(d=>c+=[d.pr,d.pm,d.proj,d.cu,d.te].map(q).join(',')+','+d.amt+','+q(d.reason)+'\n');dl(c,'not_forecasted.csv');return}
+ let c='Source,PM,Project,Customer,Technology,Timing,Status,Amount\n';
+ f.concat(b).forEach(d=>c+=[d.src,d.pm,d.proj,d.cu,d.te,d.tm,d.st].map(q).join(',')+','+d.amt+'\n');dl(c,'backlog_forecast.csv')}
+</script></body></html>
